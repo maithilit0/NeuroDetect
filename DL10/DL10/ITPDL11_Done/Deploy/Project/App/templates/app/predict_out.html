@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification Results</title>
+    <style>
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: #2b6e94;
+            margin: 0;
+            padding: 20px;
+        }
+        .classification {
+            background-color: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2em;
+            color: #333;
+        }
+        p {
+            font-size: 1.2em;
+            color: #555;
+        }
+        /* General Styling for the Section */
+.normal-condition {
+    background-color: #f0f4f8; /* Light background color for the section */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Padding around the content */
+    margin: 20px; /* Margin around the section */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-family: 'Open Sans', Arial, sans-serif; /* Font style */
+}
+
+/* Styling for the Heading */
+.normal-condition h1 {
+    color: #333; /* Darker color for the heading */
+    font-size: 24px; /* Font size for the heading */
+    margin-bottom: 15px; /* Space below the heading */
+}
+
+/* Styling for Paragraphs */
+.normal-condition p {
+    font-size: 16px; /* Font size for paragraphs */
+    line-height: 1.6; /* Line height for better readability */
+    color: #555; /* Slightly lighter color for text */
+    margin-bottom: 10px; /* Space between paragraphs */
+}
+
+/* Styling for Strong Elements */
+.normal-condition p strong {
+    color: #007bff; /* Accent color for labels */
+    font-weight: bold; /* Bold text for labels */
+}
+
+    </style>
+</head>
+<body>
+    <div class="classification">
+        <center> <a href="/" style="color: red;" class="text-gray-300 hover:text-white">Home</a></center>
+        {% if predict == 0 %}
+        <div class="normal-condition">
+            <h1>predicted : Normal Condition</h1>
+            <p><strong>Description:</strong> This classification indicates a normal condition where no signs of Parkinson’s disease or related disorders are detected.</p>
+            <p><strong>Symptoms:</strong> No abnormal symptoms. The patient exhibits normal motor control, reflexes, and cognitive functions.</p>
+            <p><strong>Behavior:</strong> Normal daily activities and functions are performed without any neurological issues.</p>
+            <p><strong>Causes:</strong> A healthy neurological state with no detectable diseases.</p>
+            <p><strong>Prevention:</strong> Maintain a healthy lifestyle through regular physical exercise, a balanced diet, and regular check-ups.</p>
+            <p><strong>Precautions:</strong> Stay aware of any subtle changes in motor skills or cognitive function that could suggest the onset of neurological conditions.</p>
+        </div>
+        {% elif predict == 1 %}
+        <div class="normal-condition">
+            <h1>predicted : Parkinson's Disease</h1>
+            <p><strong>Description:</strong> Parkinson's disease is a progressive nervous system disorder that affects movement, causing tremors, stiffness, and difficulty with balance and coordination.</p>
+            <p><strong>Symptoms:</strong> Early symptoms include tremors, slow movement (bradykinesia), stiffness, and difficulty with balance and posture. Non-motor symptoms can include depression, sleep disorders, and cognitive impairment.</p>
+            <p><strong>Behavior:</strong> Over time, patients may have trouble walking, talking, and completing simple tasks.</p>
+            <p><strong>Causes:</strong> The exact cause is unknown, but it involves the gradual breakdown of dopamine-producing neurons in the brain. Genetic and environmental factors may contribute.</p>
+            <p><strong>Prevention:</strong> There is no known way to prevent Parkinson’s disease, but regular physical exercise and a healthy diet can help manage symptoms and slow progression.</p>
+            <p><strong>Precautions:</strong> Early detection is key. If any symptoms appear, consult a healthcare provider. Support groups, therapy, and medication can assist in managing the disease.</p>
+            <p><strong>Tremors:</strong> Often starting in the hands or fingers, especially at rest. </p>
+            <p><strong>Bradykinesia: </strong> Slowness of movement, making everyday tasks challenging. </p>
+            <p><strong>Muscle Rigidity:</strong> Stiffness in the muscles that can limit the range of motion. </p>
+            <p><strong>Postural Instability:</strong> Issues with balance and coordination, leading to a higher risk of 
+            falls.</p>
+            <h1>Non-Motor Symptoms: </h1>
+            <p><strong>Cognitive Impairment:</strong> Although not as pronounced as in Alzheimer's, cognitive 
+            decline can occur, affecting executive functions and memory.</p>
+            <p><strong>Mood Disorders:</strong> Depression, anxiety, and apathy are common, with some patients 
+            also experiencing hallucinations or delusions. </p>
+            <p><strong>Sleep Disturbances:</strong> Issues such as REM sleep behavior disorder (acting out dreams) 
+            and difficulty falling or staying asleep. </p>
+            <p><strong>Autonomic Dysfunction:</strong> Symptoms like constipation, urinary issues, and blood 
+            pressure fluctuations</p>
+            <h1>Behavioral Changes: </h1>
+            <p> <strong>Impulsivity:</strong> Some patients may develop impulsive behaviors, often related to the side 
+            effects of medication (e.g., compulsive gambling or eating).  </p>
+            <p> <strong>Changes in Speech:</strong> Soft, slurred, or monotone speech can occur, often with difficulty 
+            finding the right words.  </p>
+            <p> <strong>Reduced Facial Expression:</strong> A "masked face" appearance due to reduced facial 
+            muscle activity. Comparative Behavioral Analysis  </p>
+            <p> <strong>Cognitive Symptoms ○ AD:</strong> More pronounced memory impairment and difficulty in 
+            forming new memories. ○ PD: Memory issues are less severe; executive dysfunction 
+            and attention problems are more prominent.  </p>
+            <p> <strong> Emotional and Behavioral Symptoms ○ AD:</strong> More likely to present with hallucinations 
+            and paranoia. ○ PD: Depression and anxiety are more prevalent, with a higher tendency 
+            for apathy.  </p>
+            <p> <strong>Daily Functioning ○ AD:</strong>  Rapid decline in the ability to perform daily activities. ○ PD: 
+            Progressive motor symptoms make daily activities challenging, but cognitive symptoms 
+            are more gradua</p>
+        </div>
+            
+            
+
+            
+        
+        
+            {% endif %}
+    </div>
+</body>
+</html>

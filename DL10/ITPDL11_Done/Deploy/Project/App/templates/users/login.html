@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — NeuroDetect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.25);
+      --red-soft: rgba(232,80,58,0.10);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --card-bg:  rgba(255,255,255,0.035);
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --teal:     #38bdf8;
+      --radius:   18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%  { box-shadow: 0 0 0 0 var(--red-glow); }
+      70% { box-shadow: 0 0 0 12px rgba(232,80,58,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-10px); }
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ambient blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,80,58,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 900px;
+      width: 100%;
+      margin: 20px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--card-bdr);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      animation: fadeUp 0.6s ease both;
+      position: relative; z-index: 1;
+    }
+
+    /* ── LEFT PANEL ── */
+    .login-left {
+      background: var(--card-bg);
+      padding: 50px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brand {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 40px;
+      display: inline-block;
+    }
+    .brand span { color: var(--red); }
+
+    .login-left h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 28px; font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .login-left h2 em { font-style: italic; color: var(--red); }
+
+    .login-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .card-divider {
+      width: 36px; height: 3px;
+      background: var(--red); border-radius: 3px;
+      margin-bottom: 32px;
+    }
+
+    /* alert */
+    .login-alert {
+      background: rgba(232,80,58,0.08);
+      border: 1px solid rgba(232,80,58,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #ff8c7a;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    /* fields */
+    .pf-group { margin-bottom: 18px; }
+    .pf-group label {
+      display: block;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 7px;
+      transition: color 0.2s;
+    }
+    .pf-group:focus-within label { color: var(--red); }
+
+    .pf-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-bdr);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .pf-group input:focus {
+      border-color: rgba(232,80,58,0.45);
+      box-shadow: 0 0 0 3px rgba(232,80,58,0.07);
+    }
+    .pf-group input::placeholder { color: rgba(200,210,230,0.2); }
+
+    .btn-login {
+      width: 100%;
+      background: var(--red); color: #fff;
+      padding: 13px 20px; font-size: 14px; font-weight: 700;
+      border-radius: 50px; border: none;
+      box-shadow: 0 6px 22px var(--red-glow);
+      transition: all 0.3s; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 24px;
+    }
+    .btn-login:hover {
+      background: #c94030;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(232,80,58,0.5);
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .register-link a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .register-link a:hover { color: var(--white); }
+
+    /* ── RIGHT PANEL ── */
+    .login-right {
+      background: linear-gradient(160deg, rgba(30,10,8,0.85) 0%, rgba(13,17,23,0.97) 100%),
+                  url('https://media.istockphoto.com/id/2160062160/vector/207_brain-02-ab__-%C3%B0%C2%BA%C3%B0%C3%B0%C3%B1%C3%B1%C3%B0%C3%B0%C3%B1%C3%B0-%C3%B0%C2%BA%C3%B0%C3%B0%C3%B1%C3%B1%C3%B0%C3%B0%C3%B1%C3%B0.jpg?s=612x612') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .right-icon {
+      font-size: 52px;
+      color: var(--red);
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+      opacity: 0.85;
+    }
+
+    .login-right h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+    .login-right h3 em { font-style: italic; color: var(--red); }
+
+    .login-right p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 280px;
+    }
+
+    .right-stats {
+      display: flex;
+      gap: 28px;
+      margin-top: 36px;
+      justify-content: center;
+    }
+    .r-stat { text-align: center; }
+    .r-stat .num {
+      font-family: 'Fraunces', serif;
+      font-size: 22px; font-weight: 700; color: var(--white);
+    }
+    .r-stat .num span { color: var(--red); }
+    .r-stat .lbl {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-top: 3px;
+    }
+    .r-vdiv { width:1px; background: var(--card-bdr); align-self: stretch; }
+
+    /* hero tag */
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 20px;
+    }
+    .dot {
+      width: 5px; height: 5px; background: var(--red);
+      border-radius: 50%; animation: pulse-ring 2s infinite;
+    }
+
+    @media (max-width: 700px) {
+      .login-wrapper { grid-template-columns: 1fr; }
+      .login-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+
+    <!-- LEFT: form -->
+    <div class="login-left">
+      <a href="/" class="brand">Neuro<span>Detect</span></a>
+
+      <h2>Welcome <em>Back</em></h2>
+      <p class="login-sub">Sign in to access AI-powered brain disease detection.</p>
+      <div class="card-divider"></div>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="login-alert">
+          {% for key, value in form.errors.items %}
+            <div>{{ value }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="pf-group">
+          <label>Username</label>
+          {{ form.username }}
+        </div>
+
+        <div class="pf-group">
+          <label>Password</label>
+          {{ form.password }}
+        </div>
+
+        <button type="submit" class="btn-login">
+          <i class="fa fa-sign-in"></i> Sign In
+        </button>
+      </form>
+
+      <div class="register-link">
+        Don't have an account? <a href="{% url 'users-register' %}">Register</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: branding panel -->
+    <div class="login-right">
+      <div class="hero-tag"><span class="dot"></span> AI-Powered</div>
+      <div class="right-icon"><i class="fa fa-brain"></i></div>
+      <h3>Detect <em>Neurological</em><br>Diseases Early</h3>
+      <p>Deep learning analysis of brain MRI scans to identify disease stages with clinical-grade accuracy.</p>
+      <div class="right-stats">
+        <div class="r-stat">
+          <div class="num">4<span>+</span></div>
+          <div class="lbl">Stages</div>
+        </div>
+        <div class="r-vdiv"></div>
+        <div class="r-stat">
+          <div class="num">2<span>+</span></div>
+          <div class="lbl">Diseases</div>
+        </div>
+        <div class="r-vdiv"></div>
+        <div class="r-stat">
+          <div class="num">CNN</div>
+          <div class="lbl">Model</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

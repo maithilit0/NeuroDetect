@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parkinson's Prediction — NeuroDetect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.25);
+      --red-soft: rgba(232,80,58,0.10);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --card-bg:  rgba(255,255,255,0.035);
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --teal:     #38bdf8;
+      --amber:    #fbbf24;
+      --radius:   18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%  { box-shadow: 0 0 0 0 var(--red-glow); }
+      70% { box-shadow: 0 0 0 12px rgba(232,80,58,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,80,58,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 520px;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 24px;
+      transition: color 0.2s, gap 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .back-link:hover { color: var(--white); gap: 10px; }
+
+    /* card */
+    .pred-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      padding: 44px 40px;
+    }
+
+    /* hero tag */
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    .dot {
+      width: 5px; height: 5px; background: var(--red);
+      border-radius: 50%; animation: pulse-ring 2s infinite;
+      display: inline-block;
+    }
+
+    .pred-card h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--white); line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .pred-card h1 em { font-style: italic; color: var(--red); }
+
+    .pred-sub {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.65; margin-bottom: 28px;
+    }
+
+    .card-divider {
+      width: 36px; height: 3px;
+      background: var(--red); border-radius: 3px;
+      margin-bottom: 30px;
+    }
+
+    /* form groups */
+    .pf-group { margin-bottom: 20px; }
+    .pf-group label {
+      display: block;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+    .pf-group:focus-within label { color: var(--red); }
+
+    .pf-group select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-bdr);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(200,210,230,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .pf-group select:focus {
+      border-color: rgba(232,80,58,0.45);
+      box-shadow: 0 0 0 3px rgba(232,80,58,0.07);
+    }
+    .pf-group select option {
+      background: #1c2333;
+      color: var(--white);
+    }
+
+    /* separator */
+    .pf-sep {
+      border: none;
+      border-top: 1px solid var(--card-bdr);
+      margin: 24px 0;
+    }
+
+    /* submit */
+    .btn-predict {
+      width: 100%;
+      background: var(--red); color: #fff;
+      padding: 13px 20px; font-size: 14px; font-weight: 700;
+      border-radius: 50px; border: none;
+      box-shadow: 0 6px 22px var(--red-glow);
+      transition: all 0.3s; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-predict:hover {
+      background: #c94030;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(232,80,58,0.5);
+    }
+
+    /* info pills row */
+    .info-pills {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .info-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-bdr);
+      padding: 4px 10px; border-radius: 50px;
+    }
+    .info-pill i { font-size: 9px; color: var(--amber); }
+
+    @media (max-width: 480px) {
+      .pred-card { padding: 30px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrap">
+
+    <a href="/" class="back-link">
+      <i class="fa fa-arrow-left" style="font-size:11px;"></i> Back to Home
+    </a>
+
+    <div class="pred-card">
+
+      <div class="hero-tag"><span class="dot"></span> Prediction Model</div>
+
+      <h1>Parkinson's <em>Disease</em><br>Prediction</h1>
+      <p class="pred-sub">Select the patient's symptoms and conditions below. Our CNN model will analyse the inputs and predict the likelihood of Parkinson's disease.</p>
+      <div class="card-divider"></div>
+
+      <div class="info-pills">
+        <span class="info-pill"><i class="fa fa-circle"></i> Symptom-based</span>
+        <span class="info-pill"><i class="fa fa-circle"></i> AI-powered</span>
+        <span class="info-pill"><i class="fa fa-circle"></i> Instant result</span>
+      </div>
+
+      <form action="{% url 'model' %}" method="post">
+        {% csrf_token %}
+
+        <div class="pf-group">
+          <label>Symptoms</label>
+          <select id="symptoms" name="symptoms" required>
+            <option value="" disabled selected>Select a symptom</option>
+            <option value="17">Memory loss</option>
+            <option value="3">Confusion</option>
+            <option value="26">Visual-spatial difficulties</option>
+            <option value="8">Difficulty recognizing people</option>
+            <option value="21">Severe memory loss</option>
+            <option value="14">Incontinence</option>
+            <option value="11">Difficulty walking</option>
+            <option value="16">Loss of smell</option>
+            <option value="0">Agitation</option>
+            <option value="13">Hallucinations</option>
+            <option value="15">Loss of facial expression</option>
+            <option value="10">Difficulty swallowing</option>
+            <option value="6">Difficulty in speaking</option>
+            <option value="4">Dementia</option>
+            <option value="18">Memory problems</option>
+            <option value="2">Cognitive decline</option>
+            <option value="22">Sleep disturbances</option>
+            <option value="19">Mood changes</option>
+            <option value="5">Depression</option>
+            <option value="1">Balance problems</option>
+            <option value="23">Slowness of movement</option>
+            <option value="24">Stiffness</option>
+            <option value="25">Tremors</option>
+            <option value="12">Disorientation</option>
+            <option value="7">Difficulty in thinking</option>
+            <option value="20">Rapid eye movement (REM) sleep disorder</option>
+          </select>
+        </div>
+
+        <hr class="pf-sep">
+
+        <div class="pf-group">
+          <label>Alzheimer's Disease</label>
+          <select id="alzheimers-disease" name="Alzheimer_Disease" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+
+        <div class="pf-group">
+          <label>Overlapping Symptom</label>
+          <select id="overlapping-symptom" name="Overlapping_Symptom" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-predict">
+          <i class="fa fa-search"></i> Run Prediction
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

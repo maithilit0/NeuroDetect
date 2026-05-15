@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRI Result — NeuroDetect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.22);
+      --red-soft: rgba(232,80,58,0.09);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --bg3:      #1c2333;
+      --card-bg:  rgba(255,255,255,0.03);
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --teal:     #38bdf8;
+      --green:    #34d399;
+      --amber:    #fbbf24;
+      --radius:   18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%  { box-shadow: 0 0 0 0 var(--red-glow); }
+      70% { box-shadow: 0 0 0 10px rgba(232,80,58,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+    @keyframes scanline {
+      0%   { top: -4px; opacity: 0.6; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      padding: 72px 20px 80px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: -180px; right: -180px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(232,80,58,0.06) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed; bottom: -140px; left: -140px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 68%);
+      pointer-events: none;
+    }
+
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      margin-bottom: 30px;
+      transition: color 0.2s, gap 0.2s;
+      animation: fadeUp 0.4s ease both;
+    }
+    .back-link:hover { color: var(--white); gap: 11px; }
+
+    /* hero card */
+    .result-hero {
+      background: var(--bg2);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      padding: 42px 36px;
+      text-align: center;
+      margin-bottom: 22px;
+      position: relative; overflow: hidden;
+      animation: fadeUp 0.5s ease 0.08s both;
+    }
+    .result-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(232,80,58,0.07) 0%, transparent 62%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.22);
+      color: #ff9584; font-size: 9px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 18px;
+    }
+    .dot {
+      width: 5px; height: 5px;
+      background: var(--red); border-radius: 50%;
+      animation: pulse-ring 2s infinite; display: inline-block;
+    }
+
+    .result-hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 30px; font-weight: 400; color: var(--white);
+      margin-bottom: 12px; line-height: 1.2;
+    }
+    .result-hero h1 em { font-style: italic; color: var(--red); }
+
+    .result-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 26px; border-radius: 50px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase; margin-top: 6px;
+    }
+    .badge-none  { background: rgba(52,211,153,0.10); color: var(--green);  border: 1.5px solid rgba(52,211,153,0.22); }
+    .badge-vmild { background: rgba(56,189,248,0.10); color: var(--teal);   border: 1.5px solid rgba(56,189,248,0.22); }
+    .badge-mild  { background: rgba(251,191,36,0.10); color: var(--amber);  border: 1.5px solid rgba(251,191,36,0.22); }
+    .badge-mod   { background: rgba(232,80,58,0.10);  color: var(--red);    border: 1.5px solid rgba(232,80,58,0.22); }
+    .badge-dot   { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* main grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 18px;
+      animation: fadeUp 0.5s ease 0.16s both;
+    }
+
+    /* scan card */
+    .scan-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .scan-card-inner { padding: 20px; }
+    .card-label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 2.2px; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .scan-img-wrap {
+      position: relative; border-radius: 10px; overflow: hidden;
+      background: #000; border: 1px solid var(--card-bdr);
+    }
+    .scan-img-wrap img { width: 100%; display: block; border-radius: 10px; }
+    .scanline {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      animation: scanline 2.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .scan-img-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 58%, rgba(13,17,23,0.55) 100%);
+      border-radius: 10px; pointer-events: none;
+    }
+
+    /* classif box */
+    .classif-box {
+      margin-top: 14px;
+      background: var(--bg3);
+      border: 1px solid var(--card-bdr);
+      border-radius: 10px; padding: 14px;
+    }
+    .classif-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .classif-box p { font-size: 11px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+    /* info column */
+    .info-col { display: flex; flex-direction: column; gap: 16px; }
+
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .info-card:hover { border-color: rgba(232,80,58,0.18); transform: translateY(-2px); }
+
+    .info-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .ic-icon {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .ic-red    { background: rgba(232,80,58,0.11);  color: var(--red); }
+    .ic-teal   { background: rgba(56,189,248,0.11); color: var(--teal); }
+    .ic-green  { background: rgba(52,211,153,0.11); color: var(--green); }
+    .ic-amber  { background: rgba(251,191,36,0.11); color: var(--amber); }
+
+    .info-card h3 { font-size: 13px; font-weight: 600; color: var(--white); margin: 0; letter-spacing: 0.01em; }
+    .info-card p  { font-size: 12.5px; color: var(--muted); line-height: 1.8; margin: 0; }
+
+    .c-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+    .c-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10.5px; font-weight: 600; color: var(--muted);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--card-bdr);
+      padding: 3px 10px; border-radius: 50px;
+    }
+    .c-pill i { font-size: 6px; }
+
+    .sym-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .sym-list li {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 12px; color: var(--muted); line-height: 1.65;
+    }
+    .sym-list li::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 5px;
+    }
+    .sym-green li::before { background: var(--green); }
+    .sym-teal  li::before { background: var(--teal); }
+    .sym-amber li::before { background: var(--amber); }
+    .sym-red   li::before { background: var(--red); }
+
+    /* predict1 full text strip */
+    .predict1-strip {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-bdr);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* CTA */
+    .cta-strip {
+      margin-top: 26px;
+      background: linear-gradient(135deg, rgba(232,80,58,0.09), rgba(232,80,58,0.02));
+      border: 1px solid rgba(232,80,58,0.14);
+      border-radius: var(--radius);
+      padding: 36px 28px; text-align: center;
+      animation: fadeUp 0.5s ease 0.3s both;
+    }
+    .cta-strip h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 7px;
+    }
+    .cta-strip p { font-size: 12.5px; color: var(--muted); margin-bottom: 20px; }
+    .btn-new {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red); color: #fff;
+      padding: 12px 32px; font-size: 12.5px; font-weight: 700;
+      border-radius: 50px; text-decoration: none; font-family: 'Sora', sans-serif;
+      box-shadow: 0 6px 20px var(--red-glow);
+      transition: all 0.3s;
+    }
+    .btn-new:hover {
+      background: #c94030; color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(232,80,58,0.45);
+    }
+
+    @media (max-width: 640px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .result-hero { padding: 28px 18px; }
+      .result-hero h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <a href="/" class="back-link"><i class="fa fa-arrow-left" style="font-size:10px;"></i> Back to Home</a>
+
+  <!-- Hero -->
+  <div class="result-hero">
+    <div class="hero-tag"><span class="dot"></span> AI Detection Complete</div>
+    <h1>MRI <em>Analysis Result</em></h1>
+
+    {% with p=predict|lower %}
+      {% if "non" in p %}
+        <span class="result-badge badge-none"><span class="badge-dot"></span> No Impairment Detected</span>
+      {% elif "verymild" in p or "very_mild" in p %}
+        <span class="result-badge badge-vmild"><span class="badge-dot"></span> Very Mild Impairment</span>
+      {% elif "moderate" in p %}
+        <span class="result-badge badge-mod"><span class="badge-dot"></span> Moderate Impairment</span>
+      {% elif "mild" in p %}
+        <span class="result-badge badge-mild"><span class="badge-dot"></span> Mild Impairment</span>
+      {% elif "parkinson" in p %}
+        <span class="result-badge badge-mod"><span class="badge-dot"></span> Parkinson Detected</span>
+      {% else %}
+        <span class="result-badge badge-vmild"><span class="badge-dot"></span> {{ predict }}</span>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main grid -->
+  <div class="main-grid">
+
+    <!-- LEFT: scan -->
+    <div class="scan-card">
+      <div class="scan-card-inner">
+        <div class="card-label"><i class="fa fa-medkit" style="margin-right:5px;"></i> Brain Scan</div>
+        <div class="scan-img-wrap">
+          {% if obj.image %}
+            <img src="{{ obj.image.url }}" alt="Brain MRI Scan">
+          {% endif %}
+          <div class="scanline"></div>
+        </div>
+
+        <div class="classif-box">
+          <div class="card-label" style="margin-bottom:6px;">Classification</div>
+          {% with p=predict|lower %}
+            {% if "non" in p %}
+              <div class="classif-label" style="color:var(--green);">No Impairment</div>
+              <p>No neurodegenerative indicators detected.</p>
+            {% elif "verymild" in p or "very_mild" in p %}
+              <div class="classif-label" style="color:var(--teal);">Very Mild Impairment</div>
+              <p>Subtle early indicators. Close monitoring advised.</p>
+            {% elif "moderate" in p %}
+              <div class="classif-label" style="color:var(--red);">Moderate Impairment</div>
+              <p>Significant changes detected. Specialist consultation needed.</p>
+            {% elif "mild" in p %}
+              <div class="classif-label" style="color:var(--amber);">Mild Impairment</div>
+              <p>Noticeable changes. Early intervention recommended.</p>
+            {% elif "parkinson" in p %}
+              <div class="classif-label" style="color:var(--red);">Parkinson Detected</div>
+              <p>Parkinson's disease indicators present. Consult a neurologist.</p>
+            {% else %}
+              <div class="classif-label" style="color:var(--muted);">{{ predict }}</div>
+              <p>Consult a medical professional for full assessment.</p>
+            {% endif %}
+          {% endwith %}
+          <div class="predict1-strip">{{ predict1 }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: info cards -->
+    <div class="info-col">
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="ic-icon
+            {% with p=predict|lower %}
+              {% if "non" in p %}ic-green
+              {% elif "verymild" in p or "very_mild" in p %}ic-teal
+              {% elif "moderate" in p or "parkinson" in p %}ic-red
+              {% else %}ic-amber{% endif %}
+            {% endwith %}
+          "><i class="fa fa-stethoscope"></i></div>
+          <h3>Clinical Description</h3>
+        </div>
+
+        {% with p=predict|lower %}
+        {% if "non" in p %}
+          <p>No symptoms of neurodegenerative disease are detectable. Normal cognitive function with full independence. Regular monitoring is still advised for those with a family history.</p>
+          <div class="c-pills">
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--green);"></i> Normal cognition</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--green);"></i> Full independence</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--green);"></i> No treatment needed</span>
+          </div>
+        {% elif "verymild" in p or "very_mild" in p %}
+          <p>Very Mild Dementia shows early signs of cognitive impairment which may not significantly impact daily life. Occasional memory lapses and slight challenges with complex problem-solving may occur.</p>
+          <div class="c-pills">
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Minor memory lapses</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Fully independent</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Close monitoring</span>
+          </div>
+        {% elif "moderate" in p %}
+          <p>Significant difficulties across memory, reasoning, and daily tasks. The individual may require assistance with personal hygiene and recognising family members. Full-time care is often necessary.</p>
+          <div class="c-pills">
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Severe memory loss</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Daily care required</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Behavioural changes</span>
+          </div>
+        {% elif "mild" in p %}
+          <p>Cognitive changes become noticeable to family and colleagues. Memory gaps are more frequent and mood changes may appear. The individual can still live independently with occasional reminders.</p>
+          <div class="c-pills">
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Noticeable memory loss</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Mostly independent</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Intervention advised</span>
+          </div>
+        {% elif "parkinson" in p %}
+          <p>Parkinson's disease indicators detected. Early diagnosis enables better management of motor and non-motor symptoms. Neurologist consultation and personalised care planning is strongly recommended.</p>
+          <div class="c-pills">
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Motor symptoms</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Specialist review needed</span>
+            <span class="c-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Manageable with care</span>
+          </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="ic-icon ic-amber"><i class="fa fa-exclamation-circle"></i></div>
+          <h3>Symptoms</h3>
+        </div>
+        {% with p=predict|lower %}
+        {% if "non" in p %}
+          <ul class="sym-list sym-green">
+            <li>No abnormal motor or cognitive symptoms</li>
+            <li>Normal daily function and memory</li>
+            <li>No neurological indicators detected</li>
+          </ul>
+        {% elif "verymild" in p or "very_mild" in p %}
+          <ul class="sym-list sym-teal">
+            <li>Occasional memory lapses</li>
+            <li>Difficulty in complex problem-solving</li>
+            <li>Slight word-finding challenges</li>
+            <li>Symptoms often dismissed as normal ageing</li>
+          </ul>
+        {% elif "moderate" in p %}
+          <ul class="sym-list sym-red">
+            <li>Severe and frequent memory loss</li>
+            <li>Difficulty recognising close family members</li>
+            <li>Loss of track of time and place</li>
+            <li>Agitation, wandering, depression</li>
+            <li>Needs help with dressing and hygiene</li>
+          </ul>
+        {% elif "mild" in p %}
+          <ul class="sym-list sym-amber">
+            <li>More frequent memory gaps</li>
+            <li>Reduced concentration</li>
+            <li>Mood swings or anxiety</li>
+            <li>May get lost in familiar places</li>
+          </ul>
+        {% elif "parkinson" in p %}
+          <ul class="sym-list sym-red">
+            <li>Resting tremor in hands or limbs</li>
+            <li>Muscle rigidity and stiffness</li>
+            <li>Slowness of movement (bradykinesia)</li>
+            <li>Postural instability or balance issues</li>
+            <li>Changes in speech and handwriting</li>
+          </ul>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="ic-icon ic-teal"><i class="fa fa-shield"></i></div>
+          <h3>Precautions &amp; Next Steps</h3>
+        </div>
+        {% with p=predict|lower %}
+        {% if "non" in p %}
+          <p>Maintain a healthy lifestyle through regular physical exercise, balanced diet, and annual neurological check-ups. Stay aware of any subtle cognitive changes over time.</p>
+        {% elif "verymild" in p or "very_mild" in p %}
+          <p>Close monitoring and lifestyle adjustments (diet, exercise, mental stimulation) can slow progression. Consult a neurologist for a personalised plan and consider cognitive training activities.</p>
+        {% elif "moderate" in p %}
+          <p>Full-time care or assisted living is often necessary. Consult a specialist immediately. Focus on managing symptoms, maintaining quality of life, and supporting caregivers with professional resources.</p>
+        {% elif "mild" in p %}
+          <p>Early medical intervention including cognitive therapy and medication can significantly slow progression. Consult a neurologist and consider joining a support group for guidance.</p>
+        {% elif "parkinson" in p %}
+          <p>Consult a movement disorder specialist for a full evaluation. Medication, physiotherapy, and occupational therapy can significantly improve quality of life. Early intervention leads to better long-term outcomes.</p>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+
+<!-- CTA -->
+   <div class="cta-strip">
+    <h3>Run another detection?</h3>
+    <p>Upload a new brain scan for an instant AI-powered stage classification.</p>
+    <a href="/" class="btn-new"><i class="fa fa-search"></i> Start New Detection</a>
+  </div>
+
+
+</div>
+</div>
+
+</body>
+</html>

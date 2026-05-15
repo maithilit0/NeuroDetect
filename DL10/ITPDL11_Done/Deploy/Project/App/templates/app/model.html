@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroDetect — Run Detection</title>
+
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.25);
+      --red-soft: rgba(232,80,58,0.10);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --bg3:      #1c2333;
+      --card-bg:  rgba(255,255,255,0.035);
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --green:    #34d399;
+      --radius:   18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px 50px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(232,80,58,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 var(--red-glow); }
+      70%  { box-shadow: 0 0 0 14px rgba(232,80,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      40%     { transform: translateX(8px); }
+      60%     { transform: translateX(-5px); }
+      80%     { transform: translateX(5px); }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+    /* ── NAVBAR ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(13,17,23,0.88);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--card-bdr);
+      box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 800; font-size: 20px; color: var(--white);
+      text-decoration: none; letter-spacing: 0.5px;
+    }
+    .top-nav .brand span { color: var(--red); }
+    .top-nav .nav-links { display: flex; align-items: center; gap: 4px; }
+    .top-nav .nav-links a {
+      color: rgba(200,210,230,0.60);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 8px 14px; text-decoration: none;
+      transition: color 0.2s; position: relative;
+    }
+    .top-nav .nav-links a::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 14px; right: 14px;
+      height: 2px; background: var(--red); border-radius: 2px;
+      transform: scaleX(0); transition: transform 0.25s ease;
+    }
+    .top-nav .nav-links a:hover { color: var(--white); }
+    .top-nav .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── MAIN CARD ── */
+    .deploy-card {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 580px;
+      background: var(--bg2);
+      border: 1px solid var(--card-bdr);
+      border-radius: 24px;
+      padding: 48px 44px;
+      animation: fadeUp 0.6s ease both;
+      transition: border-color 0.3s;
+    }
+    .deploy-card.has-error { border-color: rgba(232,80,58,0.45); }
+
+    .deploy-header { text-align: center; margin-bottom: 32px; }
+    .deploy-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 50px; margin-bottom: 20px;
+    }
+    .deploy-badge .dot {
+      width: 6px; height: 6px; background: var(--red);
+      border-radius: 50%; animation: pulse-ring 2s infinite;
+    }
+    .deploy-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 30px; font-weight: 700; color: var(--white);
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .deploy-header h1 em { font-style: italic; color: var(--red); }
+    .deploy-header p { font-size: 14px; color: var(--muted); line-height: 1.75; }
+
+    .divider { width: 100%; height: 1px; background: var(--card-bdr); margin: 26px 0; }
+
+    /* ── ERROR ALERTS ── */
+    .error-alert {
+      display: none;
+      background: rgba(232,80,58,0.10);
+      border: 1px solid rgba(232,80,58,0.35);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      align-items: center;
+      gap: 12px;
+    }
+    .error-alert.show {
+      display: flex;
+      animation: shake 0.4s ease;
+    }
+    .error-icon {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(232,80,58,0.15); color: var(--red);
+      font-size: 13px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .error-text { font-size: 13px; font-weight: 600; color: #ff8c7a; }
+    .error-sub  { font-size: 11px; color: var(--muted); font-weight: 400; display: block; margin-top: 2px; }
+
+    /* ── DROP ZONE ── */
+    .drop-zone {
+      border: 2px dashed rgba(232,80,58,0.28);
+      border-radius: var(--radius);
+      background: rgba(232,80,58,0.03);
+      padding: 38px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s;
+      position: relative;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--red);
+      background: rgba(232,80,58,0.07);
+    }
+    .drop-zone.error-ring {
+      border-color: rgba(232,80,58,0.7);
+      background: rgba(232,80,58,0.06);
+    }
+    /* file chosen — green border, no hover effect */
+    .drop-zone.has-file {
+      padding: 0; border-style: solid;
+      border-color: rgba(52,211,153,0.3);
+      cursor: default;
+    }
+    .drop-zone.has-file:hover { background: transparent; border-color: rgba(52,211,153,0.3); }
+    .drop-zone.has-file .drop-empty { display: none; }
+
+    .drop-icon {
+      width: 62px; height: 62px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.2);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; color: var(--red);
+      margin: 0 auto 16px auto;
+      transition: transform 0.3s;
+    }
+    .drop-zone:not(.has-file):hover .drop-icon { transform: translateY(-4px); }
+
+    .drop-empty h3 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .drop-empty p  { font-size: 12px; color: var(--muted); }
+    .drop-empty p span { color: var(--red); font-weight: 600; }
+
+    .drop-hint {
+      font-size: 11px; color: rgba(232,80,58,0.8);
+      font-weight: 600; margin-top: 8px; display: none;
+    }
+    .drop-zone.error-ring .drop-hint { display: block; }
+
+    #scan-input {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; z-index: 2;
+    }
+    .drop-zone.has-file #scan-input { display: none; }
+
+    /* ── PREVIEW ── */
+    .preview-wrap { display: none; position: relative; }
+    .drop-zone.has-file .preview-wrap { display: block; }
+
+    .preview-wrap img {
+      width: 100%; height: 260px;
+      object-fit: contain; object-position: center;
+      display: block; background: var(--bg3);
+    }
+    .preview-bar {
+      background: rgba(13,17,23,0.90);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+    }
+    .preview-bar .pname {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--green); font-size: 12px; font-weight: 600;
+      max-width: 70%; overflow: hidden;
+    }
+    .preview-bar .pname span {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .change-btn {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--red);
+      cursor: pointer; background: none; border: none;
+      font-family: inherit; transition: opacity 0.2s; flex-shrink: 0;
+    }
+    .change-btn:hover { opacity: 0.7; }
+
+    /* ── SUBMIT ── */
+    .btn-submit {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--red); color: #fff;
+      font-family: inherit; font-size: 15px; font-weight: 700; letter-spacing: 1px;
+      padding: 15px 0; border: none; border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 28px var(--red-glow);
+      transition: all 0.3s ease; margin-top: 4px;
+    }
+    .btn-submit:hover {
+      background: #c94030;
+      box-shadow: 0 12px 36px rgba(232,80,58,0.55);
+      transform: translateY(-2px);
+    }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-submit .spinner {
+      display: none; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ── CHIPS & HOME ── */
+    .info-strip { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+    .info-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--card-bg); border: 1px solid var(--card-bdr);
+      border-radius: 50px; padding: 5px 12px;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+    }
+    .info-chip i { font-size: 10px; color: var(--red); }
+
+    .home-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 16px; width: 100%;
+      background: transparent; color: rgba(200,210,230,0.55);
+      font-size: 13px; font-weight: 600;
+      border: 1px solid var(--card-bdr); border-radius: 50px;
+      padding: 11px 28px; text-decoration: none; transition: all 0.3s;
+    }
+    .home-btn:hover {
+      color: var(--white); border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 600px) {
+      .deploy-card { padding: 32px 22px; }
+      .top-nav { padding: 0 20px; }
+      .top-nav .nav-links a { padding: 8px 8px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="top-nav">
+    <a class="brand" href="/">Neuro<span>Detect</span></a>
+    <div class="nav-links">
+      {% if user.is_authenticated %}
+      <a href="/">Home</a>
+      <a href="/#service">About</a>
+      <a href="{% url 'Database' %}">Database</a>
+      <a href="{% url 'users-profile' %}">Profile</a>
+      <a href="{% url 'logout_view' %}">Logout</a>
+      {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- ── CARD ── -->
+  <div class="deploy-card" id="deploy-card">
+
+    <div class="deploy-header">
+      <div class="deploy-badge"><span class="dot"></span> AI Detection Engine</div>
+      <h1>Upload a <em>Brain Scan</em></h1>
+      <p>Our deep learning model analyses the scan and classifies the neurodegenerative disease stage in seconds.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Server-side error returned by view -->
+    {% if error_message %}
+    <div class="error-alert show">
+      <div class="error-icon"><i class="fa fa-exclamation"></i></div>
+      <div>
+        <span class="error-text">{{ error_message }}</span>
+        <span class="error-sub">Please select a valid MRI image and try again.</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Client-side error shown by JS -->
+    <div class="error-alert" id="js-error">
+      <div class="error-icon"><i class="fa fa-exclamation"></i></div>
+      <div>
+        <span class="error-text">No scan selected</span>
+        <span class="error-sub">Please upload a brain MRI image before submitting.</span>
+      </div>
+    </div>
+
+    <form action="" method="post" enctype="multipart/form-data" id="deploy-form">
+      {% csrf_token %}
+
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-empty">
+          <div class="drop-icon"><i class="fa fa-cloud-upload"></i></div>
+          <h3>Drag &amp; drop your scan here</h3>
+          <p>Supports MRI / JPEG / PNG &nbsp;·&nbsp; <span>Browse files</span></p>
+          <p class="drop-hint"><i class="fa fa-exclamation-triangle"></i> &nbsp;Please select an image first</p>
+        </div>
+
+        <div class="preview-wrap">
+          <img id="preview-img" src="" alt="Scan preview">
+          <div class="preview-bar">
+            <span class="pname">
+              <i class="fa fa-check-circle"></i>
+              <span id="chosen-name"></span>
+            </span>
+            <button type="button" class="change-btn" id="change-btn">Change</button>
+          </div>
+        </div>
+
+        <input type="file" name="image" id="scan-input" accept="image/*">
+      </div>
+
+      <button type="submit" class="btn-submit" id="submit-btn">
+        <span class="spinner" id="spinner"></span>
+        <i class="fa fa-search" id="btn-icon"></i>
+        <span id="btn-text">&nbsp;Analyse Scan</span>
+      </button>
+    </form>
+
+    <div class="info-strip">
+      <span class="info-chip"><i class="fa fa-lock"></i> Secure upload</span>
+      <span class="info-chip"><i class="fa fa-bolt"></i> Results in seconds</span>
+      <span class="info-chip"><i class="fa fa-sitemap"></i> 4-Stage Classifier</span>
+    </div>
+
+    <a href="/" class="home-btn"><i class="fa fa-home"></i>&nbsp; Back to Home</a>
+
+  </div>
+
+  <script>
+    const dropZone   = document.getElementById('drop-zone');
+    const input      = document.getElementById('scan-input');
+    const previewImg = document.getElementById('preview-img');
+    const chosenName = document.getElementById('chosen-name');
+    const changeBtn  = document.getElementById('change-btn');
+    const jsError    = document.getElementById('js-error');
+    const deployCard = document.getElementById('deploy-card');
+
+    let hasFile = false;
+
+    function clearError() {
+      jsError.classList.remove('show');
+      dropZone.classList.remove('error-ring');
+      deployCard.classList.remove('has-error');
+    }
+
+    function showError() {
+      jsError.classList.add('show');
+      dropZone.classList.add('error-ring');
+      deployCard.classList.add('has-error');
+      jsError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function loadFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        chosenName.textContent = file.name;
+        dropZone.classList.add('has-file');
+        hasFile = true;
+        clearError();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    input.addEventListener('change', () => {
+      if (input.files[0]) loadFile(input.files[0]);
+    });
+
+    changeBtn.addEventListener('click', () => {
+      dropZone.classList.remove('has-file');
+      previewImg.src = '';
+      input.value = '';
+      hasFile = false;
+      dropZone.appendChild(input);
+      input.style.display = 'block';
+      input.click();
+    });
+
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!dropZone.classList.contains('has-file')) dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        loadFile(file);
+      }
+    });
+
+    // Validate before submit
+    document.getElementById('deploy-form').addEventListener('submit', function(e) {
+      if (!hasFile || !input.files || input.files.length === 0) {
+        e.preventDefault();
+        showError();
+        return;
+      }
+      document.getElementById('spinner').style.display  = 'inline-block';
+      document.getElementById('btn-icon').style.display = 'none';
+      document.getElementById('btn-text').textContent   = '  Analysing…';
+      document.getElementById('submit-btn').disabled    = true;
+    });
+  </script>
+
+</body>
+</html>

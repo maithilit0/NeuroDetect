@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NeuroDetect — Database</title>
+
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    :root {
+      --red:       #e8503a;
+      --red-glow:  rgba(232,80,58,0.25);
+      --red-soft:  rgba(232,80,58,0.10);
+      --bg:        #0d1117;
+      --bg2:       #161b24;
+      --bg3:       #1c2333;
+      --card-bg:   rgba(255,255,255,0.035);
+      --card-bdr:  rgba(255,255,255,0.07);
+      --white:     #f0f4fc;
+      --muted:     rgba(200,210,230,0.55);
+      --teal:      #38bdf8;
+      --green:     #34d399;
+      --amber:     #fbbf24;
+      --radius:    18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 var(--red-glow); }
+      70%  { box-shadow: 0 0 0 16px rgba(232,80,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.25s; }
+    .d3 { animation-delay: 0.40s; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+    /* ── NAVBAR ── */
+    .navbar-default {
+      background: rgba(13,17,23,0.88) !important;
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--card-bdr) !important;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+      min-height: 48px !important;
+    }
+    .navbar-default .navbar-collapse { padding: 0; }
+    .navbar-brand {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 17px !important;
+      color: var(--white) !important;
+      padding: 10px 15px !important;
+      line-height: 28px;
+    }
+    .navbar-brand span { color: var(--red); }
+    .nav.navbar-nav > li > a {
+      color: rgba(200,210,230,0.60) !important;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 14px 14px !important;
+      transition: color 0.2s; position: relative;
+    }
+    .nav.navbar-nav > li > a::after {
+      content: ''; position: absolute;
+      bottom: 8px; left: 14px; right: 14px;
+      height: 2px; background: var(--red);
+      border-radius: 2px; transform: scaleX(0);
+      transition: transform 0.25s ease;
+    }
+    .nav.navbar-nav > li > a:hover { color: var(--white) !important; }
+    .nav.navbar-nav > li > a:hover::after { transform: scaleX(1); }
+    .nav.navbar-nav > li.active > a {
+      color: var(--white) !important;
+      background: transparent !important;
+    }
+    .nav.navbar-nav > li.active > a::after { transform: scaleX(1); }
+
+    /* ── PAGE HEADER ── */
+    .page-header-wrap {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--card-bdr);
+      padding: 90px 0 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(232,80,58,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 50px; margin-bottom: 22px;
+    }
+    .hero-tag .dot {
+      width: 6px; height: 6px; background: var(--red);
+      border-radius: 50%; animation: pulse-ring 2s infinite;
+    }
+    .page-header-wrap h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 44px; font-weight: 700;
+      color: var(--white); line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .page-header-wrap h1 em { font-style: italic; color: var(--red); }
+    .page-header-wrap p {
+      color: var(--muted); font-size: 15px;
+      max-width: 520px; margin: 0 auto;
+    }
+
+    /* stats row */
+    .db-stats {
+      display: flex; justify-content: center;
+      gap: 48px; margin-top: 40px; flex-wrap: wrap;
+    }
+    .db-stat { text-align: center; }
+    .db-stat .num {
+      font-family: 'Fraunces', serif;
+      font-size: 28px; font-weight: 700; color: var(--white); line-height: 1;
+    }
+    .db-stat .num span { color: var(--red); }
+    .db-stat .lbl {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-top: 5px;
+    }
+    .stat-divider { width: 1px; background: var(--card-bdr); align-self: stretch; }
+
+    /* ── SEARCH / FILTER BAR ── */
+    .db-controls {
+      padding: 32px 0 0;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .search-box {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: 50px; padding: 10px 20px;
+      min-width: 260px; transition: border-color 0.25s;
+    }
+    .search-box:focus-within { border-color: rgba(232,80,58,0.4); }
+    .search-box i { color: var(--muted); font-size: 13px; }
+    .search-box input {
+      background: none; border: none; outline: none;
+      color: var(--white); font-size: 13px; font-family: inherit;
+      width: 100%;
+    }
+    .search-box input::placeholder { color: var(--muted); }
+
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-pill {
+      padding: 7px 16px; border-radius: 50px; border: 1px solid var(--card-bdr);
+      background: var(--card-bg); color: var(--muted);
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      border-color: rgba(232,80,58,0.4);
+      background: var(--red-soft); color: #ff8c7a;
+    }
+    .filter-pill.active { color: var(--red); }
+
+    /* ── MAIN TABLE ── */
+    .db-section { padding: 32px 0 80px; }
+
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .db-table {
+      width: 100%; border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    /* header row */
+    .db-table thead tr {
+      background: rgba(232,80,58,0.08);
+      border-bottom: 1px solid rgba(232,80,58,0.18);
+    }
+    .db-table thead th {
+      padding: 16px 20px;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--red); text-align: center;
+    }
+    .db-table thead th:first-child { text-align: left; padding-left: 28px; }
+
+    /* body rows */
+    .db-table tbody tr {
+      border-bottom: 1px solid var(--card-bdr);
+      transition: background 0.2s;
+    }
+    .db-table tbody tr:last-child { border-bottom: none; }
+    .db-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+    .db-table tbody td {
+      padding: 18px 20px;
+      text-align: center; vertical-align: middle;
+    }
+    .db-table tbody td:first-child { text-align: left; padding-left: 28px; }
+
+    /* image cell */
+    .img-cell { display: flex; align-items: center; gap: 14px; }
+    .img-thumb {
+      width: 72px; height: 72px; object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--card-bdr);
+      transition: transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .img-thumb:hover {
+      transform: scale(1.08);
+      border-color: rgba(232,80,58,0.4);
+    }
+    .img-placeholder {
+      width: 72px; height: 72px; border-radius: 12px;
+      background: var(--bg3); border: 1px dashed var(--card-bdr);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 20px;
+    }
+    .img-meta { display: flex; flex-direction: column; gap: 4px; }
+    .img-name { font-size: 13px; font-weight: 600; color: var(--white); }
+    .img-id   { font-size: 11px; color: var(--muted); font-family: monospace; }
+
+    /* label badge */
+    .label-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 50px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+    }
+    .badge-none  { background: rgba(52,211,153,0.10); color: var(--green);  border: 1px solid rgba(52,211,153,0.2); }
+    .badge-vmild { background: rgba(56,189,248,0.10); color: var(--teal);   border: 1px solid rgba(56,189,248,0.2); }
+    .badge-mild  { background: rgba(251,191,36,0.10); color: var(--amber);  border: 1px solid rgba(251,191,36,0.2); }
+    .badge-mod   { background: rgba(232,80,58,0.10);  color: var(--red);    border: 1px solid rgba(232,80,58,0.2); }
+    .badge-default { background: var(--card-bg); color: var(--muted); border: 1px solid var(--card-bdr); }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* row number */
+    .row-num {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      font-family: monospace;
+    }
+
+    /* empty state */
+    .empty-state {
+      padding: 80px 20px; text-align: center;
+    }
+    .empty-icon {
+      width: 72px; height: 72px; border-radius: 20px;
+      background: var(--red-soft); border: 1px solid rgba(232,80,58,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: var(--red);
+      margin: 0 auto 20px;
+    }
+    .empty-state h4 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .empty-state p  { font-size: 13px; color: var(--muted); }
+
+    /* overline */
+    .overline {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+    }
+    .section-divider {
+      width: 44px; height: 3px; background: var(--red);
+      border-radius: 3px; margin: 14px auto 0;
+    }
+
+    /* lightbox */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-inner { position: relative; max-width: 520px; width: 90%; }
+    .lightbox-inner img {
+      width: 100%; border-radius: var(--radius);
+      border: 1px solid var(--card-bdr);
+    }
+    .lightbox-close {
+      position: absolute; top: -14px; right: -14px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--red); color: #fff; border: none;
+      font-size: 16px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px var(--red-glow);
+    }
+    .lightbox-caption {
+      text-align: center; margin-top: 14px;
+      font-size: 13px; color: var(--muted);
+    }
+
+    /* responsive */
+    @media (max-width: 768px) {
+      .page-header-wrap h1 { font-size: 30px; }
+      .db-stats { gap: 24px; }
+      .stat-divider { display: none; }
+      .db-controls { flex-direction: column; align-items: stretch; }
+      .db-table thead { display: none; }
+      .db-table tbody tr { display: block; padding: 16px 0; }
+      .db-table tbody td {
+        display: flex; justify-content: space-between;
+        align-items: center; text-align: right;
+        padding: 10px 20px; border-bottom: 1px solid var(--card-bdr);
+      }
+      .db-table tbody td:last-child { border-bottom: none; }
+      .db-table tbody td::before {
+        content: attr(data-label);
+        font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--red);
+      }
+      .db-table tbody td:first-child { padding-left: 20px; }
+      .img-cell { flex-direction: column; align-items: flex-end; }
+    }
+  </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="48">
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-12">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'users-home' %}">Neuro<span>Detect</span></a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+          <ul class="nav navbar-nav">
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'users-home' %}">Home</a></li>
+            <li><a href="{% url 'users-home' %}#service">About</a></li>
+            <li class="active"><a href="{% url 'Database' %}">Database</a></li>
+            <li><a href="{% url 'users-profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout_view' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="page-header-wrap">
+    <div class="container">
+      <div class="fade-up d1">
+        <div class="hero-tag"><span class="dot"></span> Training Data Repository</div>
+      </div>
+      <div class="fade-up d2">
+        <h1>Brain Scan <em>Database</em></h1>
+        <p>All labelled MRI scans used to train, validate, and test the NeuroDetect deep learning model.</p>
+      </div>
+      <div class="db-stats fade-up d3">
+        <div class="db-stat">
+          <div class="num">{{ models|length }}<span>+</span></div>
+          <div class="lbl">Total Scans</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="db-stat">
+          <div class="num">4<span></span></div>
+          <div class="lbl">Class Labels</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="db-stat">
+          <div class="num">MRI<span></span></div>
+          <div class="lbl">Scan Type</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TABLE SECTION ══ -->
+  <section class="db-section">
+    <div class="container">
+
+      <!-- Controls -->
+      <div class="db-controls">
+        <div class="search-box">
+          <i class="fa fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search by label…">
+        </div>
+        <div class="filter-pills">
+          <span class="filter-pill active" data-filter="all">All</span>
+          <span class="filter-pill" data-filter="non">No Impairment</span>
+          <span class="filter-pill" data-filter="verymild">Very Mild</span>
+          <span class="filter-pill" data-filter="milddemented">Mild</span>
+          <span class="filter-pill" data-filter="moderate">Moderate</span>
+        </div>
+      </div>
+
+      <!-- Table card -->
+      <div class="table-card" style="margin-top:24px;">
+        <table class="db-table" id="dbTable">
+          <thead>
+            <tr>
+              <th style="width:55%;">Scan Image</th>
+              <th style="width:30%;">Stage Label</th>
+              <th style="width:15%;">#</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for model in models %}
+            <tr data-label-val="{{ model.label }}">
+              <td data-label="Scan Image">
+                <div class="img-cell">
+                  {% if model.image %}
+                    <img class="img-thumb"
+                         src="{{ model.image.url }}"
+                         alt="MRI Scan"
+                         onclick="openLightbox(this.src, '{{ model.label }}')"
+                         title="Click to enlarge">
+                  {% else %}
+                    <div class="img-placeholder"><i class="fa fa-image"></i></div>
+                  {% endif %}
+                  <div class="img-meta">
+                    <span class="img-name">Brain MRI Scan</span>
+                    <span class="img-id">#{{ forloop.counter|stringformat:"04d" }}</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Stage Label">
+                {% with lbl=model.label|lower %}
+                {% if "non_parkinson" in lbl or "non parkinson" in lbl %}
+                  <span class="label-badge badge-none"><span class="badge-dot"></span>No Parkinson</span>
+                {% elif "parkinson" in lbl %}
+                  <span class="label-badge badge-mod"><span class="badge-dot"></span>Parkinson</span>
+                {% elif "nondemented" in lbl or "non_demented" in lbl or "no impairment" in lbl %}
+                  <span class="label-badge badge-none"><span class="badge-dot"></span>No Impairment</span>
+                {% elif "verymild" in lbl or "very mild" in lbl or "very_mild" in lbl %}
+                  <span class="label-badge badge-vmild"><span class="badge-dot"></span>Very Mild Impairment</span>
+                {% elif "moderate" in lbl %}
+                  <span class="label-badge badge-mod"><span class="badge-dot"></span>Moderate Demented</span>
+                {% elif "mild" in lbl %}
+                  <span class="label-badge badge-mild"><span class="badge-dot"></span>Mild Demented</span>
+                {% else %}
+                  <span class="label-badge badge-default"><span class="badge-dot"></span>{{ model.label }}</span>
+                {% endif %}
+              {% endwith %}
+              </td>
+              <td data-label="#">
+                <span class="row-num">{{ forloop.counter }}</span>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">
+                <div class="empty-state">
+                  <div class="empty-icon"><i class="fa fa-database"></i></div>
+                  <h4>No records found</h4>
+                  <p>The database is currently empty. Upload brain scans to populate this table.</p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ LIGHTBOX ══ -->
+  <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-times"></i></button>
+      <img id="lightboxImg" src="" alt="MRI Scan">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+  <script>
+    // ── Lightbox ──
+    function openLightbox(src, label) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').textContent = 'Stage: ' + label;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox(e) {
+      if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.tagName === 'BUTTON') {
+        document.getElementById('lightbox').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // ── Search ──
+    document.getElementById('searchInput').addEventListener('input', function() {
+      filterTable();
+    });
+
+    // ── Filter pills ──
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', function() {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        filterTable();
+      });
+    });
+
+    function filterTable() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const activePill = document.querySelector('.filter-pill.active');
+      const filterVal = activePill ? activePill.dataset.filter : 'all';
+
+      document.querySelectorAll('#dbTable tbody tr[data-label-val]').forEach(row => {
+        const label = (row.dataset.labelVal || '').toLowerCase().replace(/[\s_]/g, '');
+        const matchSearch = !search || label.includes(search.replace(/[\s_]/g, ''));
+
+        let matchFilter = false;
+        if (filterVal === 'all') {
+          matchFilter = true;
+        } else if (filterVal === 'non') {
+          matchFilter = label.includes('non') || label.includes('noimpairment');
+        } else if (filterVal === 'verymild') {
+          matchFilter = label.includes('verymild');
+        } else if (filterVal === 'milddemented') {
+          // Only mild — exclude verymild and moderate
+          matchFilter = label.includes('mild') && !label.includes('verymild') && !label.includes('moderate');
+        } else if (filterVal === 'moderate') {
+          matchFilter = label.includes('moderate');
+        }
+
+        row.style.display = (matchSearch && matchFilter) ? '' : 'none';
+      });
+    }
+
+    // ── Scroll-triggered fade ──
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('#dbTable tbody tr').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = `opacity 0.45s ease ${(i % 8) * 0.06}s, transform 0.45s ease ${(i % 8) * 0.06}s`;
+      obs.observe(el);
+    });
+  </script>
+
+</body>
+</html>

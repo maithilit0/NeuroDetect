@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NeuroDetect — Brain Disease Detection</title>
+
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    :root {
+      --red:       #e8503a;
+      --red-glow:  rgba(232,80,58,0.25);
+      --red-soft:  rgba(232,80,58,0.10);
+      --bg:        #0d1117;
+      --bg2:       #161b24;
+      --bg3:       #1c2333;
+      --card-bg:   rgba(255,255,255,0.035);
+      --card-bdr:  rgba(255,255,255,0.07);
+      --white:     #f0f4fc;
+      --muted:     rgba(200,210,230,0.55);
+      --teal:      #38bdf8;
+      --green:     #34d399;
+      --amber:     #fbbf24;
+      --radius:    18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 var(--red-glow); }
+      70%  { box-shadow: 0 0 0 16px rgba(232,80,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-8px); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.25s; }
+    .d3 { animation-delay: 0.40s; }
+    .d4 { animation-delay: 0.55s; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+    /* ─────────────────────────────
+       NAVBAR — compact & sleek
+    ───────────────────────────── */
+    .navbar-default {
+      background: rgba(13,17,23,0.88) !important;
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--card-bdr) !important;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+      min-height: 48px !important;   /* ← slimmer bar */
+    }
+    .navbar-default .navbar-collapse { padding: 0; }
+    .navbar-brand {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 17px !important;
+      color: var(--white) !important;
+      padding: 10px 15px !important; /* ← less top/bottom padding */
+      line-height: 28px;
+    }
+    .navbar-brand span { color: var(--red); }
+
+    /* nav links — smaller, tighter */
+    .nav.navbar-nav > li > a {
+      color: rgba(200,210,230,0.60) !important;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 14px 14px !important;  /* ← slimmer */
+      transition: color 0.2s;
+      position: relative;
+    }
+    /* underline only on hover — NOT permanently active */
+    .nav.navbar-nav > li > a::after {
+      content: '';
+      position: absolute;
+      bottom: 8px; left: 14px; right: 14px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+    }
+    .nav.navbar-nav > li > a:hover { color: var(--white) !important; }
+    .nav.navbar-nav > li > a:hover::after { transform: scaleX(1); }
+    /* active item — just brighter text, NO underline by default */
+    .nav.navbar-nav > li.active > a {
+      color: var(--white) !important;
+      background: transparent !important;
+    }
+    .nav.navbar-nav > li.active > a::after { transform: scaleX(0); }
+
+    /* ─────────────────────────────
+       HERO
+    ───────────────────────────── */
+    #banner {
+      background: url('/static/img/b3.jpg') no-repeat center center fixed;
+      background-size: cover; min-height: 100vh; position: relative;
+    }
+    .bg-color {
+      min-height: 100vh;
+      background: linear-gradient(160deg,
+        rgba(13,17,23,0.93) 0%,
+        rgba(30,10,8,0.80) 50%,
+        rgba(13,17,23,0.95) 100%);
+      display: flex; align-items: center;
+    }
+    .banner-info { width:100%; padding:110px 0 80px; }
+
+    .hero-tag {
+      display: inline-flex; align-items:center; gap:8px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size:11px; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase;
+      padding:6px 16px; border-radius:50px; margin-bottom:22px;
+    }
+    .hero-tag .dot {
+      width:6px; height:6px; background:var(--red);
+      border-radius:50%; animation:pulse-ring 2s infinite;
+    }
+
+    .banner-text h1 {
+      font-family:'Fraunces', serif;
+      font-size:50px; font-weight:700;
+      color:var(--white); line-height:1.15;
+      margin-bottom:18px;
+      text-shadow:0 4px 30px rgba(0,0,0,0.5);
+    }
+    .banner-text h1 em { font-style:italic; color:var(--red); }
+    /* h3 removed — no subtitle shown */
+    .banner-text p {
+      color:rgba(200,210,230,0.6) !important;
+      font-size:15px; line-height:1.85;
+      max-width:560px; margin:0 auto 36px auto;
+    }
+
+    /* single centred button only */
+    .hero-actions { display:flex; justify-content:center; }
+    .btn-appoint {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--red) !important; color:#fff !important;
+      padding:14px 40px; font-size:14px; font-weight:700;
+      letter-spacing:1px; border-radius:50px; border:none;
+      box-shadow:0 8px 28px var(--red-glow);
+      transition:all 0.3s ease; text-decoration:none; cursor:pointer;
+    }
+    .btn-appoint:hover {
+      background:#c94030 !important;
+      box-shadow:0 12px 36px rgba(232,80,58,0.55);
+      transform:translateY(-3px); color:#fff !important;
+    }
+
+    /* stats bar */
+    .hero-stats {
+      display:flex; justify-content:center;
+      gap:50px; margin-top:54px; flex-wrap:wrap;
+    }
+    .stat-item { text-align:center; }
+    .stat-item .num {
+      font-family:'Fraunces', serif;
+      font-size:30px; font-weight:700; color:var(--white); line-height:1;
+    }
+    .stat-item .num span { color:var(--red); }
+    .stat-item .lbl {
+      font-size:11px; font-weight:600; letter-spacing:1.5px;
+      text-transform:uppercase; color:var(--muted); margin-top:5px;
+    }
+    .stat-divider { width:1px; background:var(--card-bdr); align-self:stretch; }
+
+    .overlay-detail { margin-top:48px; }
+    .overlay-detail a {
+      color:rgba(200,210,230,0.3); font-size:26px;
+      transition:color 0.3s; display:inline-block;
+      animation:float 2.5s ease-in-out infinite;
+    }
+    .overlay-detail a:hover { color:var(--red); }
+
+    /* ─────────────────────────────
+       SHARED
+    ───────────────────────────── */
+    .section-padding { padding:90px 0; }
+    .overline {
+      display:inline-block; font-size:10px; font-weight:800;
+      letter-spacing:3px; text-transform:uppercase;
+      color:var(--red); margin-bottom:10px;
+    }
+    .section-divider {
+      width:44px; height:3px; background:var(--red);
+      border-radius:3px; margin:14px 0 20px;
+    }
+
+    /* ─────────────────────────────
+       BRAIN DISORDER STAGES
+    ───────────────────────────── */
+    #service { background:var(--bg2); }
+
+    .intro-sidebar { position:sticky; top:80px; padding-right:24px; }
+    .intro-sidebar h2 {
+      font-family:'Fraunces', serif;
+      font-size:30px; font-weight:700; color:var(--white); line-height:1.25; margin-bottom:10px;
+    }
+    .intro-sidebar p { font-size:14px; color:var(--muted); line-height:1.8; }
+    .info-pill {
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--red-soft); border:1px solid rgba(232,80,58,0.2);
+      color:#ff9080; font-size:12px; font-weight:600;
+      padding:6px 14px; border-radius:50px; margin-bottom:20px;
+    }
+
+    /* stage card */
+    .stage-card {
+      background:var(--card-bg); border:1px solid var(--card-bdr);
+      border-radius:var(--radius); padding:26px 24px;
+      margin-bottom:20px; display:flex; gap:18px; align-items:flex-start;
+      transition:transform 0.3s, border-color 0.3s, background 0.3s; cursor:default;
+    }
+    .stage-card:hover {
+      transform:translateY(-5px);
+      border-color:rgba(232,80,58,0.3);
+      background:rgba(232,80,58,0.05);
+    }
+    .stage-icon {
+      flex-shrink:0; width:52px; height:52px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center; font-size:20px;
+    }
+    .icon-red   { background:rgba(232,80,58,0.12);  color:var(--red); }
+    .icon-teal  { background:rgba(56,189,248,0.12); color:var(--teal); }
+    .icon-green { background:rgba(52,211,153,0.12); color:var(--green); }
+    .icon-amber { background:rgba(251,191,36,0.12); color:var(--amber); }
+
+    .stage-body h4 { font-size:15px; font-weight:700; color:var(--white); margin-bottom:6px; }
+    .stage-body p  { font-size:13px; color:var(--muted); line-height:1.75; margin:0; }
+    .severity-badge {
+      display:inline-block; font-size:10px; font-weight:700;
+      letter-spacing:1px; text-transform:uppercase;
+      padding:3px 10px; border-radius:50px; margin-bottom:7px;
+    }
+    .sev-none  { background:rgba(52,211,153,0.12); color:var(--green); }
+    .sev-low   { background:rgba(56,189,248,0.12); color:var(--teal); }
+    .sev-med   { background:rgba(251,191,36,0.12); color:var(--amber); }
+    .sev-high  { background:rgba(232,80,58,0.12);  color:var(--red); }
+
+    /* detail bullets inside card */
+    .stage-details {
+      margin-top:12px; padding-top:12px;
+      border-top:1px solid var(--card-bdr);
+      display:flex; flex-wrap:wrap; gap:8px;
+    }
+    .stage-detail-pill {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:600; color:var(--muted);
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--card-bdr);
+      padding:4px 10px; border-radius:50px;
+    }
+    .stage-detail-pill i { font-size:9px; }
+
+    /* ─────────────────────────────
+       DEEP LEARNING
+    ───────────────────────────── */
+    #about { background:var(--bg3); }
+    .dl-sidebar h2 {
+      font-family:'Fraunces', serif;
+      font-size:30px; font-weight:700; color:var(--white); line-height:1.2;
+    }
+    .dl-sidebar p { font-size:14px; color:var(--muted); line-height:1.8; }
+    .dl-sidebar a {
+      display:inline-flex; align-items:center; gap:6px;
+      color:var(--teal) !important; font-size:13px; font-weight:600;
+      text-decoration:none; margin-top:6px; transition:gap 0.2s;
+    }
+    .dl-sidebar a:hover { gap:12px; }
+
+    .concept-card {
+      background:var(--card-bg); border:1px solid var(--card-bdr);
+      border-radius:var(--radius); padding:28px; margin-bottom:20px;
+      transition:transform 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .concept-card:hover {
+      transform:translateY(-5px);
+      border-color:rgba(56,189,248,0.25);
+      background:rgba(56,189,248,0.04);
+    }
+    .c-header { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    .c-icon {
+      width:44px; height:44px; border-radius:12px;
+      background:rgba(56,189,248,0.12); color:var(--teal);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+    }
+    .concept-card h3 { font-size:16px; font-weight:700; color:var(--white); margin:0; }
+    .concept-card p  { font-size:13.5px; color:var(--muted); line-height:1.8; margin:0; }
+
+    /* ─────────────────────────────
+       TECH SECTION
+    ───────────────────────────── */
+    #testimonial { background:var(--bg2); }
+    .tech-card {
+      background:var(--card-bg); border:1px solid var(--card-bdr);
+      border-radius:var(--radius); padding:32px 28px;
+      height:100%; margin-bottom:24px;
+      transition:transform 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .tech-card:hover {
+      transform:translateY(-6px);
+      border-color:rgba(232,80,58,0.28);
+      background:rgba(232,80,58,0.04);
+    }
+    .tech-logo {
+      width:52px; height:52px; border-radius:16px;
+      background:var(--red-soft); border:1px solid rgba(232,80,58,0.2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; color:var(--red); margin-bottom:18px;
+    }
+    .tech-badge {
+      display:inline-block; font-size:10px; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase; color:var(--red);
+      background:var(--red-soft); border:1px solid rgba(232,80,58,0.15);
+      padding:4px 12px; border-radius:50px; margin-bottom:14px;
+    }
+    .tech-card h3 {
+      font-family:'Fraunces', serif;
+      font-size:22px; font-weight:700; color:var(--white); margin-bottom:6px;
+    }
+    .tech-card h3 span {
+      display:block; font-family:'Plus Jakarta Sans', sans-serif;
+      font-size:12px; font-weight:500; color:var(--muted);
+      letter-spacing:1px; margin-top:4px;
+    }
+    .tech-card p { font-size:13.5px; color:var(--muted); line-height:1.8; margin-top:14px; }
+
+    /* ─────────────────────────────
+       CTA STRIP
+    ───────────────────────────── */
+    .cta-strip {
+      background:linear-gradient(135deg, rgba(232,80,58,0.12), rgba(232,80,58,0.04));
+      border-top:1px solid rgba(232,80,58,0.15);
+      padding:70px 0; text-align:center;
+    }
+    .cta-strip h2 {
+      font-family:'Fraunces', serif;
+      font-size:30px; font-weight:700; color:var(--white); margin-bottom:10px;
+    }
+    .cta-strip p { color:var(--muted); font-size:15px; margin-bottom:28px; }
+
+    @media (max-width:768px) {
+      .banner-text h1 { font-size:30px; }
+      .hero-stats { gap:28px; }
+      .stat-divider { display:none; }
+      .intro-sidebar { position:static; padding-right:0; margin-bottom:40px; }
+      .dl-sidebar { margin-bottom:40px; }
+    }
+  </style>
+</head>
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="48">
+
+  <!-- ══ BANNER + NAVBAR ══ -->
+  <section id="banner" class="banner">
+    <div class="bg-color">
+
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="col-md-12">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Neuro<span>Detect</span></a>
+            </div>
+            <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+              <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="active"><a href="#banner">Home</a></li>
+                <li><a href="#service">About</a></li>
+                <li><a href="{% url 'Database' %}">Database</a></li>
+                <li><a href="{% url 'users-profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- ══ HERO ══ -->
+      <div class="container">
+        <div class="row">
+          <div class="banner-info">
+            <div class="banner-text text-center">
+
+              <div class="fade-up d1">
+                <div class="hero-tag"><span class="dot"></span> AI-Powered Medical Diagnosis</div>
+              </div>
+
+              <div class="fade-up d2">
+                <h1>Detect <em>Neurodegenerative</em><br>Diseases Early</h1>
+                <p>
+                  Early detection of Alzheimer's, Parkinson's, and ALS can dramatically improve
+                  patient outcomes. Our deep learning system analyses brain scans to identify
+                  disease stages with clinical-grade accuracy.
+                </p>
+              </div>
+
+              {% if user.is_authenticated %}
+              <!-- Single centred button, Learn More removed -->
+              <div class="hero-actions fade-up d3">
+                <a href="{% url 'Deploy_8' %}" class="btn btn-appoint">
+                  <i class="fa fa-search"></i>&nbsp; Start Detection
+                </a>
+              </div>
+              {% endif %}
+
+              <!-- Stats bar -->
+              <div class="hero-stats fade-up d4">
+                <div class="stat-item">
+                  <div class="num">4<span>+</span></div>
+                  <div class="lbl">Disease Stages</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="num">2<span>+</span></div>
+                  <div class="lbl">Diseases Covered</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="num">CNN</div>
+                  <div class="lbl">Deep Learning</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="overlay-detail text-center">
+              <a href="#service"><i class="fa fa-angle-down"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {% if user.is_authenticated %}
+
+  <!-- ══ BRAIN DISORDER STAGES ══ -->
+  <section id="service" class="section-padding">
+    <div class="container">
+      <div class="row">
+
+        <!-- Sticky sidebar -->
+        <div class="col-md-4 col-sm-12">
+          <div class="intro-sidebar">
+            <div class="info-pill"><i class="fa fa-heartbeat" style="font-size:12px;"></i>&nbsp; Classification Guide</div>
+            <h2>Brain Disorder<br>Stages</h2>
+            <div class="section-divider"></div>
+            <p>
+              Neurodegenerative diseases progress through distinct stages, each with unique
+              symptoms and care requirements. Understanding these stages helps clinicians
+              intervene at the right time and patients prepare for what lies ahead.
+            </p>
+            <br>
+            <p style="font-size:13px;color:rgba(200,210,230,0.38);">
+              Our AI classifies brain MRI scans into one of four stages below, giving clinicians
+              an instant, data-backed second opinion.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage cards — expanded with extra detail pills -->
+        <div class="col-md-8 col-sm-12">
+
+          <!-- Stage 1 — No Impairment -->
+          <div class="stage-card">
+            <div class="stage-icon icon-green"><i class="fa fa-check-circle"></i></div>
+            <div class="stage-body" style="width:100%;">
+              <span class="severity-badge sev-none">No Impairment</span>
+              <h4>No Impairment Stage</h4>
+              <p>
+                No noticeable symptoms are present. The individual performs all daily activities
+                without difficulty and shows no measurable memory loss or cognitive decline.
+                Brain structure appears normal on standard imaging, though microscopic changes
+                may already be forming at a cellular level. Regular monitoring is still advised
+                for those with a family history of neurodegenerative disease.
+              </p>
+              <div class="stage-details">
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--green);"></i> Normal cognition</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--green);"></i> Full independence</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--green);"></i> No treatment needed</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--green);"></i> Annual checkups advised</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage 2 — Very Mild -->
+          <div class="stage-card">
+            <div class="stage-icon icon-teal"><i class="fa fa-eye"></i></div>
+            <div class="stage-body" style="width:100%;">
+              <span class="severity-badge sev-low">Very Mild</span>
+              <h4>Very Mild Impairment</h4>
+              <p>
+                Subtle but noticeable cognitive difficulties begin to emerge. The individual may
+                experience occasional memory lapses — forgetting names or misplacing items —
+                and slight challenges with complex problem-solving. These symptoms are often
+                dismissed as normal ageing. The person remains fully independent and can
+                manage all daily tasks without external help. Close monitoring and lifestyle
+                adjustments (diet, exercise, mental stimulation) can slow progression.
+              </p>
+              <div class="stage-details">
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Minor memory lapses</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Still fully independent</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Close monitoring needed</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--teal);"></i> Lifestyle changes beneficial</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage 3 — Mild -->
+          <div class="stage-card">
+            <div class="stage-icon icon-amber"><i class="fa fa-stethoscope"></i></div>
+            <div class="stage-body" style="width:100%;">
+              <span class="severity-badge sev-med">Mild</span>
+              <h4>Mild Impairment Stage</h4>
+              <p>
+                Cognitive changes become noticeable to family and colleagues. Memory gaps are
+                more frequent, concentration is reduced, and mood swings or anxiety may appear.
+                The individual might get lost in familiar places or repeat questions. They can
+                still live independently but may need occasional reminders for appointments or
+                medications. Early medical intervention — including cognitive therapy and
+                medication — can significantly slow the progression at this stage.
+              </p>
+              <div class="stage-details">
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Noticeable memory loss</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Mood changes possible</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Mostly independent</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Medical intervention advised</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--amber);"></i> Cognitive therapy helps</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage 4 — Moderate -->
+          <div class="stage-card">
+            <div class="stage-icon icon-red"><i class="fa fa-ambulance"></i></div>
+            <div class="stage-body" style="width:100%;">
+              <span class="severity-badge sev-high">Moderate</span>
+              <h4>Moderate Impairment Stage</h4>
+              <p>
+                Significant and wide-ranging difficulties emerge across memory, reasoning, language,
+                and daily tasks. The individual may struggle to recognise close family members,
+                lose track of time and place, and require help with dressing, eating, or personal
+                hygiene. Behavioural changes such as agitation, wandering, or depression are common.
+                Full-time care or assisted living is often necessary. Treatment focuses on managing
+                symptoms, maintaining quality of life, and supporting caregivers.
+              </p>
+              <div class="stage-details">
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Severe memory loss</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Daily assistance required</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Behavioural changes</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Language difficulties</span>
+                <span class="stage-detail-pill"><i class="fa fa-circle" style="color:var(--red);"></i> Full-time care often needed</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ DEEP LEARNING ══ -->
+  <section id="about" class="section-padding">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-4 col-sm-12">
+          <div class="dl-sidebar">
+            <span class="overline" style="display:block;margin-bottom:10px;">Technology</span>
+            <h2>Powered by<br>Deep Learning</h2>
+            <div class="section-divider"></div>
+            <p>Deep learning is an AI method that teaches computers to process data in a way inspired by the human brain — enabling superhuman accuracy in medical image analysis.</p>
+            <a href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" style="margin-top:14px;">Explore deep learning &rarr;</a>
+          </div>
+        </div>
+
+        <div class="col-md-8 col-sm-12">
+          <div class="concept-card">
+            <div class="c-header">
+              <div class="c-icon"><i class="fa fa-th"></i></div>
+              <h3>What is a CNN?</h3>
+            </div>
+            <p><strong style="color:var(--white);">Convolutional Neural Networks (CNNs)</strong> are the backbone of modern image recognition. They automatically learn spatial hierarchies of features from images through multiple layers — detecting edges, shapes, and complex patterns. In NeuroDetect, CNNs analyse MRI scans to identify early disease markers.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="c-header">
+              <div class="c-icon"><i class="fa fa-sitemap"></i></div>
+              <h3>What is an ANN?</h3>
+            </div>
+            <p><strong style="color:var(--white);">Artificial Neural Networks (ANNs)</strong> are machine learning models inspired by the human brain. Composed of interconnected layers of neurons, ANNs learn from labelled data and generalise to unseen examples — ideal for multi-class medical classification tasks like staging disease severity.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TECHNOLOGIES ══ -->
+  <section id="testimonial" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom:50px;">
+          <div class="text-center">
+            <span class="overline">Built With</span>
+            <h2 style="font-family:'Fraunces',serif;font-size:34px;font-weight:700;color:var(--white);margin-top:8px;">Technologies Used</h2>
+            <div class="section-divider" style="margin:14px auto 0;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-4">
+          <div class="tech-card">
+            <div class="tech-logo"><i class="fa fa-code"></i></div>
+            <span class="tech-badge">Frontend</span>
+            <h3>HTML<span>&amp; CSS</span></h3>
+            <p>The building blocks of every web page. HTML structures content while CSS handles layout, styling, and responsive design — giving NeuroDetect its clean visual identity.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="tech-card">
+            <div class="tech-logo"><i class="fa fa-terminal"></i></div>
+            <span class="tech-badge">Language</span>
+            <h3>Python<span>Programming</span></h3>
+            <p>The go-to language for AI and data science. Python powers NeuroDetect's machine learning pipelines, model training, and data processing with TensorFlow and Keras.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="tech-card">
+            <div class="tech-logo"><i class="fa fa-server"></i></div>
+            <span class="tech-badge">Framework</span>
+            <h3>Django<span>Web Framework</span></h3>
+            <p>A robust Python framework handling routing, authentication, and database management — letting us focus on features rather than boilerplate infrastructure.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <div class="cta-strip">
+    <div class="container">
+      <h2>Ready to run a detection?</h2>
+      <p>Upload a brain scan and get an instant AI-powered stage classification.</p>
+      <a href="{% url 'Deploy_8' %}" class="btn btn-appoint">
+        <i class="fa fa-search"></i>&nbsp; Start Detection Now
+      </a>
+    </div>
+  </div>
+
+  {% endif %}
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script src="{% static 'contactform/contactform.js' %}"></script>
+
+  <script>
+    // Scroll-triggered fade-up
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.10 });
+
+    document.querySelectorAll('.stage-card, .concept-card, .tech-card').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transitionDelay = (i % 3) * 0.1 + 's';
+      el.style.transition = 'opacity 0.55s ease, transform 0.55s ease, border-color 0.3s, background 0.3s';
+      obs.observe(el);
+    });
+  </script>
+
+</body>
+</html>

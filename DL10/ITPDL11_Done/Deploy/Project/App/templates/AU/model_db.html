@@ -1,0 +1,315 @@
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Records Database — NeuroDetect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.25);
+      --red-soft: rgba(232,80,58,0.10);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --bg3:      #1c2333;
+      --card-bg:  rgba(255,255,255,0.035);
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --teal:     #38bdf8;
+      --green:    #34d399;
+      --radius:   18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%  { box-shadow: 0 0 0 0 var(--red-glow); }
+      70% { box-shadow: 0 0 0 10px rgba(232,80,58,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,80,58,0.06) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 14px;
+    }
+    .dot { width:5px; height:5px; background:var(--red); border-radius:50%; animation:pulse-ring 2s infinite; display:inline-block; }
+    .page-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 30px; font-weight: 700; color: var(--white);
+      margin-bottom: 6px;
+    }
+    .page-header h1 em { font-style: italic; color: var(--red); }
+    .page-header p { font-size: 13px; color: var(--muted); }
+
+    .header-divider {
+      width: 36px; height: 3px; background: var(--red);
+      border-radius: 3px; margin: 14px auto 0;
+    }
+
+    /* Search bar */
+    .search-wrap {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .search-wrap i {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); font-size: 13px;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: 50px;
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      padding: 11px 18px 11px 42px;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .search-wrap input::placeholder { color: rgba(200,210,230,0.25); }
+    .search-wrap input:focus {
+      border-color: rgba(232,80,58,0.4);
+      box-shadow: 0 0 0 3px rgba(232,80,58,0.07);
+    }
+
+    /* Table card */
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-bdr);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--card-bdr);
+    }
+
+    th {
+      padding: 14px 20px;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      color: var(--muted); text-align: left;
+    }
+
+    th.sortable { cursor: pointer; user-select: none; position: relative; }
+    th.sortable:hover { color: var(--white); }
+    th.sortable .sort-icon { margin-left: 6px; font-size: 9px; opacity: 0.4; }
+    th.sortable.sorted-asc .sort-icon,
+    th.sortable.sorted-desc .sort-icon { opacity: 1; color: var(--red); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--card-bdr);
+      transition: background 0.2s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+    td {
+      padding: 16px 20px;
+      font-size: 13px; color: var(--muted);
+      vertical-align: middle;
+    }
+
+    /* diagnosis badge */
+    .diagnosis-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 50px;
+    }
+    .badge-none  { background: rgba(52,211,153,0.12); color: #34d399; }
+    .badge-vmild { background: rgba(56,189,248,0.12); color: #38bdf8; }
+    .badge-mild  { background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .badge-mod   { background: rgba(232,80,58,0.12);  color: #e8503a; }
+    .badge-default{ background: rgba(255,255,255,0.06); color: var(--muted); }
+
+    /* audio */
+    audio {
+      height: 32px;
+      filter: invert(1) hue-rotate(180deg) brightness(0.8);
+      border-radius: 6px;
+      max-width: 260px; width: 100%;
+    }
+
+    /* empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .empty-state i { font-size: 36px; margin-bottom: 14px; opacity: 0.3; }
+    .empty-state p { font-size: 14px; }
+
+    /* row count */
+    .table-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--card-bdr);
+      font-size: 11px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="hero-tag"><span class="dot"></span> Records</div>
+      <h1>Detection <em>Database</em></h1>
+      <p>All stored scan records and their AI diagnosis labels</p>
+      <div class="header-divider"></div>
+    </div>
+
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search" placeholder="Search records by diagnosis...">
+    </div>
+
+    <div class="table-card">
+      <table id="records-table">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="0">
+              <i class="fas fa-microphone" style="margin-right:6px;color:var(--red);"></i>Audio
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+            <th class="sortable" data-col="1">
+              <i class="fas fa-tag" style="margin-right:6px;color:var(--red);"></i>Diagnosis Label
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for model in models %}
+          <tr>
+            <td>
+              <audio controls>
+                <source src="{{ model.audio_file.url }}" type="audio/mpeg">
+              </audio>
+            </td>
+            <td>
+              {% with label=model.prediction|lower %}
+                {% if "non" in label or "no_imp" in label %}
+                  <span class="diagnosis-badge badge-none"><i class="fas fa-circle" style="font-size:6px;"></i> {{ model.prediction }}</span>
+                {% elif "verymild" in label or "very_mild" in label or "very mild" in label %}
+                  <span class="diagnosis-badge badge-vmild"><i class="fas fa-circle" style="font-size:6px;"></i> {{ model.prediction }}</span>
+                {% elif "moderate" in label %}
+                  <span class="diagnosis-badge badge-mod"><i class="fas fa-circle" style="font-size:6px;"></i> {{ model.prediction }}</span>
+                {% elif "mild" in label %}
+                  <span class="diagnosis-badge badge-mild"><i class="fas fa-circle" style="font-size:6px;"></i> {{ model.prediction }}</span>
+                {% else %}
+                  <span class="diagnosis-badge badge-default"><i class="fas fa-circle" style="font-size:6px;"></i> {{ model.prediction }}</span>
+                {% endif %}
+              {% endwith %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="2">
+              <div class="empty-state">
+                <i class="fas fa-database"></i>
+                <p>No records found in the database.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="table-footer" id="rowCount">
+        <i class="fas fa-info-circle" style="color:var(--red);"></i>
+        <span id="countText">Loading...</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Row count
+    function updateCount() {
+      const visible = Array.from(document.querySelectorAll('#records-table tbody tr')).filter(r => r.style.display !== 'none').length;
+      document.getElementById('countText').textContent = visible + ' record' + (visible !== 1 ? 's' : '') + ' shown';
+    }
+    updateCount();
+
+    // Search
+    document.getElementById('search').addEventListener('input', function() {
+      const term = this.value.toLowerCase();
+      document.querySelectorAll('#records-table tbody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+      updateCount();
+    });
+
+    // Sort
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = parseInt(th.dataset.col);
+        const tbody = document.querySelector('#records-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const asc = !th.classList.contains('sorted-asc');
+
+        document.querySelectorAll('th.sortable').forEach(h => h.classList.remove('sorted-asc','sorted-desc'));
+        th.classList.add(asc ? 'sorted-asc' : 'sorted-desc');
+
+        rows.sort((a, b) => {
+          const aT = a.cells[col]?.textContent.trim() || '';
+          const bT = b.cells[col]?.textContent.trim() || '';
+          return asc ? aT.localeCompare(bT) : bT.localeCompare(aT);
+        });
+        rows.forEach(r => tbody.appendChild(r));
+        updateCount();
+      });
+    });
+  </script>
+</body>
+{% endblock content %}

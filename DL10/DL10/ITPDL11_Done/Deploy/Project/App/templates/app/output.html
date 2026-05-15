@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ predict | upper }} Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #49458a;
+            color: #0f264d;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #793838;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body h2 {
+            color: #333;
+        }
+
+        .card-body h3 {
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        .card-body ul {
+            list-style-type: disc;
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .card-body ul li {
+            margin-bottom: 10px;
+        }
+
+        .card-body .prevention ul li {
+            margin-bottom: 15px;
+        }
+        #code-boxx {
+        font-weight: 600;
+        margin-top: 50px;
+        }
+        #code-boxx a {
+        display: inline-block;
+        padding: 5px;
+        text-decoration: none;
+        background: #b90a0a;
+        color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-white text-lg font-bold">Brain Stage Detection</a>
+        <ul class="flex space-x-4">
+            <li><a href="/" class="text-gray-300 hover:text-white">Home</a></li>
+            <li><a href="{% url 'Deploy_8' %}" class="text-gray-300 hover:text-white">Model</a></li>
+            <li><a href="{% url 'Database' %}" class="text-gray-300 hover:text-white">Database</a></li>
+            <li><a href="{% url 'users-profile' %}" class="text-gray-300 hover:text-white">Profile Database</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+
+    <div class="card">
+        <div class="card">
+            <div class="card-content text-center">
+                <img src="{{ obj.image.url }}" alt="Input Images" class="mb-4 mx-auto">
+                <p class="card-title">{{ predict1 | upper }}</p>
+            </div>
+        </div>
+        <div id="code-boxx" style="margin-right: 1850px;">
+            
+              <a href="{% url 'model' %}"
+                target="_blank">
+                Prediction
+              </a>
+        </div>
+        <div class="card-body">
+            {% if obj %}
+            {% if predict == 'MildDemented' %}
+            <h2>Mild Dementia</h2>
+            <p>Mild Dementia is an early stage where cognitive decline becomes noticeable, but individuals can still perform most daily tasks independently.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Memory lapses, especially for recent events.</li>
+                <li>Difficulty planning or organizing.</li>
+                <li>Losing or misplacing items.</li>
+                <li>Struggling to find words or names.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Age-related brain changes.</li>
+                <li>Alzheimer’s disease or vascular conditions.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Stay mentally active (puzzles, learning new skills).</li>
+                <li>Regular physical exercise.</li>
+                <li>Maintain social connections.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Routine health check-ups.</li>
+                <li>Avoid isolation.</li>
+                <li>Engage in memory exercises.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Alzheimer's Disease.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Mediterranean diet rich in vegetables, whole grains, fish.</li>
+                <li>Avoid processed foods and sugars.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Ensure adequate intake of Vitamin E, B12, and Omega-3 fatty acids.</li>
+            </ul>
+
+            {% elif predict == 'ModerateDemented' %}
+            <h2>Moderate Dementia</h2>
+            <p>Moderate Dementia involves significant memory loss and confusion that may interfere with daily life.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Confusion about where they are or what day it is.</li>
+                <li>Increased memory loss and forgetfulness.</li>
+                <li>Difficulty performing basic tasks (dressing, bathing).</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Alzheimer’s or other neurodegenerative conditions.</li>
+                <li>Brain trauma or stroke.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Continue engaging in mental and physical activities.</li>
+                <li>Control risk factors (blood pressure, diabetes).</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Regular health screening.</li>
+                <li>Monitor diet and ensure safe environments.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Alzheimer's Disease, Vascular Dementia.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Balanced meals with lean protein, whole grains, and leafy greens.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Focus on Vitamin D, Omega-3s, and antioxidants.</li>
+            </ul>
+
+            {% elif predict == 'Non_Parkinson' %}
+            <h2>Non-Parkinson</h2>
+            <p>This classification indicates an individual who does not have Parkinson's Disease but may have similar motor symptoms.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Tremors, slow movements.</li>
+                <li>Stiffness and balance issues.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Secondary causes like drug side effects or other neurodegenerative diseases.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Regular physical activity.</li>
+                <li>Early treatment of any underlying conditions.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Avoid medications that affect the nervous system.</li>
+                <li>Regular neurological check-ups.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Essential Tremor, Multiple System Atrophy (MSA).</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>High-antioxidant foods, such as berries, and Omega-3 rich foods.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Adequate intake of Vitamin D and CoQ10.</li>
+            </ul>
+
+            {% elif predict == 'NonDemented' %}
+            <h2>Non-Demented</h2>
+            <p>Individuals classified as Non-Demented show no signs of cognitive decline.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>No noticeable memory or cognitive issues.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Healthy brain function and lifestyle habits.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Engage in lifelong learning and physical exercise.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Maintain a healthy diet and regular mental challenges.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Cognitive impairment due to aging may still occur later.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Rich in antioxidants, vitamins, and minerals.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Regular Vitamin C, E, and Omega-3 intake for brain health.</li>
+            </ul>
+
+            {% elif predict == 'Parkinson' %}
+            <h2>Parkinson’s Disease</h2>
+            <p>Parkinson's Disease is a neurodegenerative disorder affecting movement and motor function.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Tremors (shaking), slow movement, stiffness.</li>
+                <li>Impaired balance and coordination.</li>
+                <li>Muscle rigidity and tremors at rest.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Genetic and environmental factors.</li>
+                <li>Loss of dopamine-producing neurons in the brain.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Early detection of symptoms.</li>
+                <li>Healthy lifestyle with physical activity.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Monitor medication that can impact motor function.</li>
+                <li>Regular medical evaluations.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Multiple System Atrophy, Lewy Body Dementia.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Focus on fiber-rich foods for digestive health.</li>
+                <li>Omega-3 fatty acids, nuts, and seeds.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Ensure sufficient Vitamin D, B-complex, and magnesium.</li>
+            </ul>
+
+            {% elif predict == 'VeryMildDemented' %}
+            <h2>Very Mild Dementia</h2>
+            <p>Very Mild Dementia shows early signs of cognitive impairment, which may not significantly impact daily life.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Occasional memory lapses.</li>
+                <li>Difficulty in complex problem-solving.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Early stages of Alzheimer's or vascular-related issues.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Brain-stimulating activities.</li>
+                <li>Regular social and physical activities.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Early intervention in cognitive exercises.</li>
+                <li>Regular health screening.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Alzheimer's Disease, Vascular Dementia.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Plant-based diet with high levels of antioxidants.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Focus on Vitamin E, B-complex vitamins, and Omega-3s.</li>
+            </ul>
+
+            {% elif predict == 'Alzheimer' %}
+            <h2>Alzheimer’s Disease</h2>
+            <p>Alzheimer’s Disease is a progressive brain disorder that slowly destroys memory and cognitive skills.</p>
+            <h3>Symptoms:</h3>
+            <ul>
+                <li>Memory loss, difficulty with familiar tasks.</li>
+                <li>Mood and personality changes.</li>
+            </ul>
+            <h3>Causes:</h3>
+            <ul>
+                <li>Build-up of amyloid plaques and tau tangles in the brain.</li>
+                <li>Genetic factors.</li>
+            </ul>
+            <h3>Prevention:</h3>
+            <ul>
+                <li>Mental, physical, and social activities.</li>
+            </ul>
+            <h3>Precautions:</h3>
+            <ul>
+                <li>Early diagnosis and treatment.</li>
+                <li>Regular health check-ups.</li>
+            </ul>
+            <h3>Possible Affected Disease:</h3>
+            <ul>
+                <li>Vascular Dementia, Frontotemporal Dementia.</li>
+            </ul>
+            <h3>Food Plan:</h3>
+            <ul>
+                <li>Mediterranean diet rich in fruits, vegetables, and lean proteins.</li>
+            </ul>
+            <h3>Vitamin Body Levels:</h3>
+            <ul>
+                <li>Focus on antioxidants, B vitamins, and Vitamin D.</li>
+            </ul>
+
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

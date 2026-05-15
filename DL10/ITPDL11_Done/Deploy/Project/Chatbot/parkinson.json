@@ -1,0 +1,844 @@
+{
+    "intents": [
+        {
+            "tag": "parkinson_greetings",
+            "patterns": [
+                "Hello",
+                "Hi",
+                "Hey",
+                "Greetings",
+                "Good morning",
+                "Good afternoon",
+                "Good evening"
+            ],
+            "responses": [
+                "Hello! I'm here to provide information about Parkinson’s disease. How can I assist you today?",
+                "Hi there! Do you have any questions about Parkinson’s disease, its causes, or prevention?",
+                "Hey! I can guide you through Parkinson’s disease information. What would you like to know?",
+                "Greetings! Let's talk about Parkinson’s disease. How can I help?",
+                "Good morning! Want to learn more about Parkinson’s disease? Feel free to ask.",
+                "Good afternoon! I'm here to help you understand Parkinson’s disease better.",
+                "Good evening! If you have questions about Parkinson’s, I’m happy to assist."
+            ]
+        },
+        {
+            "tag": "what_is_parkinson",
+            "patterns": [
+                "What is Parkinson’s disease?",
+                "Can you explain Parkinson’s?",
+                "Tell me about Parkinson’s disease",
+                "What does Parkinson’s disease do?",
+                "What happens in Parkinson’s disease?"
+            ],
+            "responses": [
+                "Parkinson’s disease is a progressive neurological disorder that affects movement. It happens when nerve cells in the brain that produce dopamine stop working properly.",
+                "Parkinson’s disease leads to tremors, stiffness, and difficulty with balance and coordination. It gradually worsens over time."
+            ]
+        },
+        {
+            "tag": "causes_of_parkinson",
+            "patterns": [
+                "What causes Parkinson’s disease?",
+                "Why do people get Parkinson’s?",
+                "Is Parkinson’s hereditary?",
+                "What are the main causes of Parkinson’s?"
+            ],
+            "responses": [
+                "The exact cause of Parkinson’s disease is unknown, but it is linked to genetic and environmental factors. Loss of dopamine-producing neurons in the brain plays a major role.",
+                "Some possible causes include genetic mutations, exposure to toxins, brain inflammation, and aging-related changes in brain cells."
+            ]
+        },
+        {
+            "tag": "parkinson_symptoms",
+            "patterns": [
+                "What are the symptoms of Parkinson’s?",
+                "How do I know if I have Parkinson’s?",
+                "What are the early signs of Parkinson’s disease?"
+            ],
+            "responses": [
+                "Common symptoms of Parkinson’s disease include tremors, muscle stiffness, slow movements, and balance problems. As it progresses, speech and cognitive issues may appear.",
+                "Early signs include mild tremors, small handwriting, loss of smell, and difficulty in movement. If you notice these, consult a doctor."
+            ]
+        },
+        {
+            "tag": "parkinson_prevention",
+            "patterns": [
+                "How can I prevent Parkinson’s disease?",
+                "Are there ways to avoid Parkinson’s?",
+                "What can I do to lower my risk of Parkinson’s?"
+            ],
+            "responses": [
+                "While there’s no sure way to prevent Parkinson’s, regular exercise, a healthy diet rich in antioxidants, and avoiding toxins may lower the risk.",
+                "Engaging in physical activities, drinking green tea, and maintaining a healthy lifestyle can help protect brain health and potentially reduce the risk."
+            ]
+        },
+        {
+            "tag": "parkinson_treatment",
+            "patterns": [
+                "How is Parkinson’s treated?",
+                "Is there a cure for Parkinson’s?",
+                "What are the treatment options for Parkinson’s?"
+            ],
+            "responses": [
+                "There is no cure for Parkinson’s, but medications, physical therapy, and sometimes surgery can help manage symptoms and improve quality of life.",
+                "Doctors often prescribe dopamine-replacement medications, along with exercise and therapy, to help manage movement problems."
+            ]
+        },
+        {
+            "tag": "overcome_parkinson",
+            "patterns": [
+                "How can I overcome Parkinson’s?",
+                "Can Parkinson’s patients live a normal life?",
+                "How to deal with Parkinson’s disease?"
+            ],
+            "responses": [
+                "Although Parkinson’s is a progressive disease, patients can maintain a good quality of life with medication, physical activity, and support from family and caregivers.",
+                "Maintaining a positive mindset, regular exercise, and therapies like speech and occupational therapy can help manage the condition effectively."
+            ]
+        },
+        {
+            "tag": "diet_for_parkinson",
+            "patterns": [
+                "What should I eat for Parkinson’s?",
+                "Is diet important for Parkinson’s?",
+                "Which foods help with Parkinson’s?"
+            ],
+            "responses": [
+                "A diet rich in fruits, vegetables, whole grains, and healthy fats can help support brain health. Omega-3 fatty acids from fish may also be beneficial.",
+                "Avoid processed foods and excess sugar. Drinking plenty of water and eating fiber-rich foods can help with digestion, as Parkinson’s can slow down the gut."
+            ]
+        },
+        {
+            "tag": "exercise_for_parkinson",
+            "patterns": [
+                "Can exercise help with Parkinson’s?",
+                "What exercises are good for Parkinson’s?",
+                "Should Parkinson’s patients exercise?"
+            ],
+            "responses": [
+                "Yes, exercise is beneficial for Parkinson’s! Activities like walking, stretching, yoga, and strength training can help maintain mobility and reduce symptoms.",
+                "Regular exercise helps with balance, flexibility, and overall well-being. Consult a physical therapist for tailored exercises."
+            ]
+        },
+        {
+            "tag": "mental_health_parkinson",
+            "patterns": [
+                "Does Parkinson’s affect mental health?",
+                "Can Parkinson’s cause depression?",
+                "How to deal with anxiety in Parkinson’s?"
+            ],
+            "responses": [
+                "Yes, Parkinson’s can lead to anxiety and depression due to changes in brain chemistry. Seeking therapy, staying socially active, and exercising can help improve mood.",
+                "Meditation, breathing exercises, and engaging in hobbies can help manage mental health challenges in Parkinson’s patients."
+            ]
+        },
+        {
+            "tag": "medications_for_parkinson",
+            "patterns": [
+                "What medications are used for Parkinson’s?",
+                "Are there drugs for Parkinson’s?",
+                "How does medication help Parkinson’s?"
+            ],
+            "responses": [
+                "Common medications for Parkinson’s include Levodopa, dopamine agonists, and MAO-B inhibitors. These help manage movement symptoms but do not cure the disease.",
+                "Medications help control symptoms but may have side effects. Doctors often adjust dosages based on individual needs."
+            ]
+        },
+        {
+            "tag": "progression_of_parkinson",
+            "patterns": [
+                "How fast does Parkinson’s progress?",
+                "What are the stages of Parkinson’s?",
+                "Does Parkinson’s get worse over time?"
+            ],
+            "responses": [
+                "Parkinson’s is a progressive disease, meaning symptoms worsen over time. It typically advances through five stages, from mild symptoms to severe disability.",
+                "The speed of progression varies. Early diagnosis and proper management can slow down its effects and improve quality of life."
+            ]
+        },
+        {
+            "tag": "support_for_parkinson",
+            "patterns": [
+                "Where can I find support for Parkinson’s?",
+                "Are there support groups for Parkinson’s?",
+                "How can families help Parkinson’s patients?"
+            ],
+            "responses": [
+                "There are many Parkinson’s support groups and organizations that offer guidance and emotional support. Family and caregiver involvement is also crucial.",
+                "Joining a support group can provide comfort and practical tips. Parkinson’s foundations and online forums can also be helpful."
+            ]
+        },
+        {
+            "tag": "parkinson_research",
+            "patterns": [
+                "Are there new treatments for Parkinson’s?",
+                "Is there research on Parkinson’s?",
+                "What’s the latest in Parkinson’s research?"
+            ],
+            "responses": [
+                "Yes, research is ongoing to find better treatments and potential cures. Scientists are exploring gene therapy, stem cells, and neuroprotective drugs.",
+                "Clinical trials are testing new drugs and therapies for Parkinson’s. Advancements in deep brain stimulation are also promising."
+            ]
+        },
+        {
+            "tag": "parkinson_stages",
+            "patterns": [
+                "What are the stages of Parkinson’s?",
+                "How does Parkinson’s progress?",
+                "What happens in the later stages of Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s disease has five stages, ranging from mild symptoms in early stages to severe disability in advanced stages. Symptoms worsen gradually over time."
+            ]
+        },
+        {
+            "tag": "parkinson_diagnosis",
+            "patterns": [
+                "How is Parkinson’s diagnosed?",
+                "What tests confirm Parkinson’s disease?",
+                "Is there a test for Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s is diagnosed based on medical history, neurological exams, and symptoms. There is no single test, but brain imaging like MRI can help rule out other conditions."
+            ]
+        },
+        {
+            "tag": "parkinson_younger",
+            "patterns": [
+                "Can young people get Parkinson’s?",
+                "What is young-onset Parkinson’s?",
+                "Is Parkinson’s only for old people?"
+            ],
+            "responses": [
+                "Although Parkinson’s is more common in older adults, young-onset Parkinson’s (YOPD) can affect people under 50, with similar symptoms but slower progression."
+            ]
+        },
+        {
+            "tag": "parkinson_genetics",
+            "patterns": [
+                "Is Parkinson’s genetic?",
+                "Can Parkinson’s run in families?",
+                "What genes are linked to Parkinson’s?"
+            ],
+            "responses": [
+                "While most cases of Parkinson’s are not inherited, some genetic mutations like LRRK2 and PARK genes can increase the risk. Family history may play a role."
+            ]
+        },
+        {
+            "tag": "parkinson_environment",
+            "patterns": [
+                "Can pollution cause Parkinson’s?",
+                "Are chemicals linked to Parkinson’s?",
+                "Does the environment affect Parkinson’s risk?"
+            ],
+            "responses": [
+                "Exposure to pesticides, heavy metals, and other environmental toxins has been linked to a higher risk of Parkinson’s, though more research is needed."
+            ]
+        },
+        {
+            "tag": "parkinson_pain",
+            "patterns": [
+                "Does Parkinson’s cause pain?",
+                "Can Parkinson’s lead to body pain?",
+                "Why do Parkinson’s patients feel pain?"
+            ],
+            "responses": [
+                "Yes, many Parkinson’s patients experience pain due to muscle stiffness, cramps, and nerve issues. Stretching, massage, and medication can help manage discomfort."
+            ]
+        },
+        {
+            "tag": "parkinson_speech",
+            "patterns": [
+                "How does Parkinson’s affect speech?",
+                "Can Parkinson’s cause voice problems?",
+                "Why do Parkinson’s patients have a soft voice?"
+            ],
+            "responses": [
+                "Parkinson’s can cause a softer voice, slurred speech, and difficulty articulating words. Speech therapy and vocal exercises can improve communication."
+            ]
+        },
+        {
+            "tag": "parkinson_caregiver",
+            "patterns": [
+                "How can caregivers help Parkinson’s patients?",
+                "What support do Parkinson’s caregivers need?",
+                "Is caregiving for Parkinson’s hard?"
+            ],
+            "responses": [
+                "Caring for someone with Parkinson’s can be challenging. Support groups, respite care, and learning about the disease can help caregivers manage better."
+            ]
+        },
+        {
+            "tag": "parkinson_fatigue",
+            "patterns": [
+                "Why do Parkinson’s patients feel tired?",
+                "Can Parkinson’s cause fatigue?",
+                "How to manage fatigue in Parkinson’s?"
+            ],
+            "responses": [
+                "Fatigue is common in Parkinson’s due to changes in brain chemistry, poor sleep, and medication side effects. Staying active and taking short naps may help."
+            ]
+        },
+        {
+            "tag": "parkinson_balance",
+            "patterns": [
+                "Why do Parkinson’s patients fall?",
+                "Does Parkinson’s cause balance issues?",
+                "How to improve balance in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s affects balance and coordination, increasing fall risk. Strength training, balance exercises, and assistive devices can help prevent falls."
+            ]
+        },
+        {
+            "tag": "parkinson_alternative",
+            "patterns": [
+                "Are there natural treatments for Parkinson’s?",
+                "Can acupuncture help Parkinson’s?",
+                "Do herbal remedies work for Parkinson’s?"
+            ],
+            "responses": [
+                "Some alternative therapies like acupuncture, tai chi, and herbal supplements may help with symptoms, but they should be used alongside medical treatment."
+            ]
+        },
+        {
+            "tag": "parkinson_dementia",
+            "patterns": [
+                "Can Parkinson’s cause dementia?",
+                "What is Parkinson’s-related dementia?",
+                "Does Parkinson’s affect memory?"
+            ],
+            "responses": [
+                "Some Parkinson’s patients develop dementia in later stages, leading to memory loss, confusion, and difficulty thinking. Medications and cognitive therapy can help."
+            ]
+        },
+        {
+            "tag": "parkinson_hallucinations",
+            "patterns": [
+                "Do Parkinson’s patients hallucinate?",
+                "Can Parkinson’s cause delusions?",
+                "Why do Parkinson’s patients see things?"
+            ],
+            "responses": [
+                "Some Parkinson’s patients experience hallucinations due to medication side effects or brain changes. Adjusting medication can help manage these symptoms."
+            ]
+        },
+        {
+            "tag": "parkinson_deep_brain_stimulation",
+            "patterns": [
+                "What is deep brain stimulation?",
+                "Can DBS cure Parkinson’s?",
+                "Is deep brain stimulation safe?"
+            ],
+            "responses": [
+                "Deep Brain Stimulation (DBS) is a surgical treatment where electrodes are placed in the brain to reduce Parkinson’s symptoms. It helps with movement problems but is not a cure."
+            ]
+        },
+        {
+            "tag": "parkinson_freezing",
+            "patterns": [
+                "What is freezing in Parkinson’s?",
+                "Why do Parkinson’s patients stop moving suddenly?",
+                "How to overcome freezing in Parkinson’s?"
+            ],
+            "responses": [
+                "Freezing is when a Parkinson’s patient suddenly stops moving, often while walking. Strategies like rhythmic cues and stepping over lines can help."
+            ]
+        },
+        {
+            "tag": "parkinson_smell",
+            "patterns": [
+                "Does Parkinson’s affect the sense of smell?",
+                "Why do Parkinson’s patients lose smell?",
+                "Is loss of smell an early sign of Parkinson’s?"
+            ],
+            "responses": [
+                "Loss of smell is one of the early signs of Parkinson’s disease. It can appear years before movement symptoms begin."
+            ]
+        },
+        {
+            "tag": "parkinson_handwriting",
+            "patterns": [
+                "Why does Parkinson’s make handwriting small?",
+                "Does Parkinson’s affect writing?",
+                "What is micrographia?"
+            ],
+            "responses": [
+                "Micrographia is a condition where handwriting becomes smaller and more difficult to read, common in Parkinson’s due to motor control issues."
+            ]
+        },
+        {
+            "tag": "parkinson_music_therapy",
+            "patterns": [
+                "Can music help Parkinson’s patients?",
+                "How does music therapy help Parkinson’s?",
+                "Does rhythm improve Parkinson’s movement?"
+            ],
+            "responses": [
+                "Music therapy can improve movement, speech, and mood in Parkinson’s patients. Rhythmic music helps with walking and coordination."
+            ]
+        },
+        {
+            "tag": "parkinson_ayurveda",
+            "patterns": [
+                "Can Ayurveda treat Parkinson’s?",
+                "Are there Ayurvedic remedies for Parkinson’s?",
+                "Does Ashwagandha help Parkinson’s?"
+            ],
+            "responses": [
+                "Ayurvedic herbs like Ashwagandha and Mucuna Pruriens may help manage symptoms, but they should be used with caution and under medical supervision."
+            ]
+        },
+        {
+            "tag": "parkinson_future_cure",
+            "patterns": [
+                "Will there be a cure for Parkinson’s?",
+                "Is Parkinson’s curable in the future?",
+                "What are scientists doing to cure Parkinson’s?"
+            ],
+            "responses": [
+                "Scientists are exploring stem cell therapy, gene therapy, and neuroprotective drugs to find a cure for Parkinson’s. While there is no cure yet, research is promising."
+            ]
+        },
+        {
+            "tag": "parkinson_nutrition",
+            "patterns": [
+                "What foods help with Parkinson’s?",
+                "Can diet improve Parkinson’s symptoms?",
+                "What should Parkinson’s patients eat?"
+            ],
+            "responses": [
+                "A balanced diet with antioxidants, omega-3s, and fiber can help manage Parkinson’s symptoms. Avoid processed foods and excessive sugar."
+            ]
+        },
+        {
+            "tag": "parkinson_exercise",
+            "patterns": [
+                "Can exercise help Parkinson’s?",
+                "What exercises are good for Parkinson’s?",
+                "Should Parkinson’s patients work out?"
+            ],
+            "responses": [
+                "Regular exercise like walking, stretching, and strength training can help improve mobility, balance, and overall well-being in Parkinson’s patients."
+            ]
+        },
+        {
+            "tag": "parkinson_mood",
+            "patterns": [
+                "Can Parkinson’s cause depression?",
+                "Why do Parkinson’s patients feel sad?",
+                "How to manage depression in Parkinson’s?"
+            ],
+            "responses": [
+                "Depression is common in Parkinson’s due to brain chemistry changes. Therapy, medication, and support groups can help improve mood."
+            ]
+        },
+        {
+            "tag": "parkinson_anxiety",
+            "patterns": [
+                "Does Parkinson’s cause anxiety?",
+                "Why do Parkinson’s patients feel nervous?",
+                "How to reduce anxiety in Parkinson’s?"
+            ],
+            "responses": [
+                "Anxiety is common in Parkinson’s due to dopamine imbalances. Meditation, deep breathing, and therapy can help manage stress."
+            ]
+        },
+        {
+            "tag": "parkinson_dreams",
+            "patterns": [
+                "Why do Parkinson’s patients have vivid dreams?",
+                "Does Parkinson’s cause nightmares?",
+                "Can Parkinson’s affect sleep?"
+            ],
+            "responses": [
+                "Parkinson’s can cause vivid dreams and REM sleep behavior disorder (RBD), where patients act out dreams. Medication adjustments may help."
+            ]
+        },
+        {
+            "tag": "parkinson_urination",
+            "patterns": [
+                "Does Parkinson’s affect urination?",
+                "Why do Parkinson’s patients have bladder problems?",
+                "How to manage urinary issues in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can cause frequent urination or difficulty controlling the bladder. Hydration, scheduled bathroom breaks, and medications may help."
+            ]
+        },
+        {
+            "tag": "parkinson_gut",
+            "patterns": [
+                "Can Parkinson’s affect digestion?",
+                "Why do Parkinson’s patients have constipation?",
+                "How to improve gut health in Parkinson’s?"
+            ],
+            "responses": [
+                "Constipation is common in Parkinson’s due to slow digestion. Drinking water, eating fiber, and exercising can help improve gut health."
+            ]
+        },
+        {
+            "tag": "parkinson_skin",
+            "patterns": [
+                "Does Parkinson’s affect the skin?",
+                "Why do Parkinson’s patients have oily skin?",
+                "What are skin problems in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can cause oily skin, excessive sweating, or dry skin. Good skincare and medications may help manage symptoms."
+            ]
+        },
+        {
+            "tag": "parkinson_temperature",
+            "patterns": [
+                "Can Parkinson’s affect body temperature?",
+                "Why do Parkinson’s patients feel hot or cold?",
+                "How to manage temperature regulation in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can disrupt the body’s ability to regulate temperature, causing sweating or chills. Layering clothes and staying hydrated may help."
+            ]
+        },
+        {
+            "tag": "parkinson_medication_side_effects",
+            "patterns": [
+                "What are the side effects of Parkinson’s drugs?",
+                "Do Parkinson’s medications cause drowsiness?",
+                "Can Parkinson’s drugs cause nausea?"
+            ],
+            "responses": [
+                "Common side effects of Parkinson’s medications include nausea, dizziness, drowsiness, and hallucinations. Adjusting dosage with a doctor’s help may reduce side effects."
+            ]
+        },
+        {
+            "tag": "parkinson_meditation",
+            "patterns": [
+                "Can meditation help Parkinson’s?",
+                "Is mindfulness useful for Parkinson’s?",
+                "How does relaxation help Parkinson’s?"
+            ],
+            "responses": [
+                "Mindfulness and meditation can help reduce stress, improve focus, and manage anxiety in Parkinson’s patients."
+            ]
+        },
+        {
+            "tag": "parkinson_social_isolation",
+            "patterns": [
+                "Do Parkinson’s patients feel lonely?",
+                "How can Parkinson’s patients stay social?",
+                "Why do Parkinson’s patients withdraw?"
+            ],
+            "responses": [
+                "Social withdrawal is common in Parkinson’s due to mobility issues and depression. Staying connected with loved ones and joining support groups can help."
+            ]
+        },
+        {
+            "tag": "parkinson_loss_of_taste",
+            "patterns": [
+                "Can Parkinson’s affect taste?",
+                "Why do Parkinson’s patients lose taste?",
+                "How to improve taste in Parkinson’s?"
+            ],
+            "responses": [
+                "Many Parkinson’s patients experience a reduced sense of taste and smell, which can affect appetite. Trying different flavors and spices may help."
+            ]
+        },
+        {
+            "tag": "parkinson_drug_research",
+            "patterns": [
+                "Are there new drugs for Parkinson’s?",
+                "What are the latest treatments for Parkinson’s?",
+                "Is there a cure for Parkinson’s?"
+            ],
+            "responses": [
+                "Researchers are exploring new medications, gene therapy, and stem cell treatments for Parkinson’s. Clinical trials are ongoing to find better treatments."
+            ]
+        },
+        {
+            "tag": "parkinson_gene_therapy",
+            "patterns": [
+                "Can gene therapy cure Parkinson’s?",
+                "What is gene therapy for Parkinson’s?",
+                "How does gene therapy help Parkinson’s?"
+            ],
+            "responses": [
+                "Gene therapy aims to modify or replace faulty genes in Parkinson’s. While still experimental, it shows promise in slowing disease progression."
+            ]
+        },
+        {
+            "tag": "parkinson_music_and_dance",
+            "patterns": [
+                "Can dancing help Parkinson’s?",
+                "Why is music good for Parkinson’s?",
+                "How does rhythm help movement in Parkinson’s?"
+            ],
+            "responses": [
+                "Music and dance therapy can improve coordination, balance, and movement in Parkinson’s patients by stimulating the brain’s motor pathways."
+            ]
+        },
+        {
+            "tag": "parkinson_vision_problems",
+            "patterns": [
+                "Does Parkinson’s affect vision?",
+                "Why do Parkinson’s patients have blurry vision?",
+                "Can Parkinson’s cause eye problems?"
+            ],
+            "responses": [
+                "Parkinson’s can cause dry eyes, blurred vision, and difficulty tracking objects. Regular eye exams and lubricating drops may help."
+            ]
+        },
+        {
+            "tag": "parkinson_travel_tips",
+            "patterns": [
+                "Can Parkinson’s patients travel?",
+                "What are travel tips for Parkinson’s?",
+                "How to make travel easier with Parkinson’s?"
+            ],
+            "responses": [
+                "Traveling with Parkinson’s requires extra planning. Packing medications, choosing accessible accommodations, and scheduling breaks can make trips smoother."
+            ]
+        },
+        {
+            "tag": "parkinson_memory_problems",
+            "patterns": [
+                "Does Parkinson’s affect memory?",
+                "Why do Parkinson’s patients forget things?",
+                "How to improve memory with Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can cause mild cognitive impairment. Brain exercises, a healthy diet, and staying socially engaged can help maintain cognitive function."
+            ]
+        },
+        {
+            "tag": "parkinson_palliative_care",
+            "patterns": [
+                "What is palliative care for Parkinson’s?",
+                "How does palliative care help Parkinson’s?",
+                "When should Parkinson’s patients consider palliative care?"
+            ],
+            "responses": [
+                "Palliative care focuses on improving quality of life for advanced Parkinson’s patients, managing symptoms, and providing emotional support."
+            ]
+        },
+        {
+            "tag": "parkinson_caffeine",
+            "patterns": [
+                "Can coffee help Parkinson’s?",
+                "Does caffeine help Parkinson’s symptoms?",
+                "Should Parkinson’s patients drink coffee?"
+            ],
+            "responses": [
+                "Some studies suggest caffeine may have a protective effect on Parkinson’s, but more research is needed. Moderate intake might help with alertness."
+            ]
+        },
+        {
+            "tag": "parkinson_alcohol",
+            "patterns": [
+                "Can Parkinson’s patients drink alcohol?",
+                "Does alcohol affect Parkinson’s?",
+                "Is alcohol safe for people with Parkinson’s?"
+            ],
+            "responses": [
+                "Alcohol may worsen balance and coordination in Parkinson’s patients. It’s best to consume in moderation and consult a doctor."
+            ]
+        },
+        {
+            "tag": "parkinson_vitamin_d",
+            "patterns": [
+                "Does Vitamin D help Parkinson’s?",
+                "Should Parkinson’s patients take Vitamin D?",
+                "Can Vitamin D improve Parkinson’s symptoms?"
+            ],
+            "responses": [
+                "Low Vitamin D levels are common in Parkinson’s patients. Supplements and sunlight exposure may help improve bone health and overall well-being."
+            ]
+        },
+        {
+            "tag": "parkinson_dental_health",
+            "patterns": [
+                "Can Parkinson’s affect teeth?",
+                "Why do Parkinson’s patients have dental problems?",
+                "How to maintain oral health with Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can cause dry mouth and difficulty brushing. Electric toothbrushes and regular dental checkups can help maintain oral health."
+            ]
+        },
+        {
+            "tag": "parkinson_stress_management",
+            "patterns": [
+                "Can stress make Parkinson’s worse?",
+                "How to reduce stress with Parkinson’s?",
+                "Does anxiety worsen Parkinson’s symptoms?"
+            ],
+            "responses": [
+                "Stress can worsen Parkinson’s symptoms. Techniques like deep breathing, meditation, and engaging in hobbies may help reduce stress."
+            ]
+        },
+        {
+            "tag": "parkinson_acupuncture",
+            "patterns": [
+                "Can acupuncture help Parkinson’s?",
+                "Does acupuncture improve Parkinson’s symptoms?",
+                "Is acupuncture effective for Parkinson’s?"
+            ],
+            "responses": [
+                "Some Parkinson’s patients find acupuncture helpful for relaxation and pain relief, though scientific evidence is limited."
+            ]
+        },
+        {
+            "tag": "parkinson_massage_therapy",
+            "patterns": [
+                "Can massage help Parkinson’s?",
+                "Does massage therapy improve Parkinson’s symptoms?",
+                "Is massage beneficial for Parkinson’s patients?"
+            ],
+            "responses": [
+                "Massage therapy may help reduce muscle stiffness, improve circulation, and promote relaxation in Parkinson’s patients."
+            ]
+        },
+        {
+            "tag": "parkinson_music_therapy",
+            "patterns": [
+                "How does music therapy help Parkinson’s?",
+                "Can music improve Parkinson’s symptoms?",
+                "Why do Parkinson’s patients respond to music?"
+            ],
+            "responses": [
+                "Music therapy can improve movement, coordination, and mood in Parkinson’s patients by stimulating brain pathways."
+            ]
+        },
+        {
+            "tag": "parkinson_movement_disorders",
+            "patterns": [
+                "What are movement disorders in Parkinson’s?",
+                "Why do Parkinson’s patients freeze?",
+                "How to overcome freezing episodes?"
+            ],
+            "responses": [
+                "Freezing episodes can occur when walking. Strategies like rhythmic cues, stepping over obstacles, and physical therapy can help manage them."
+            ]
+        },
+        {
+            "tag": "parkinson_surgery",
+            "patterns": [
+                "What surgical treatments exist for Parkinson’s?",
+                "Is surgery an option for Parkinson’s?",
+                "How does deep brain stimulation work?"
+            ],
+            "responses": [
+                "Deep brain stimulation (DBS) is a surgical option that can help manage movement symptoms in Parkinson’s by regulating brain signals."
+            ]
+        },
+        {
+            "tag": "parkinson_hallucinations",
+            "patterns": [
+                "Can Parkinson’s cause hallucinations?",
+                "Why do Parkinson’s patients see things?",
+                "How to manage hallucinations in Parkinson’s?"
+            ],
+            "responses": [
+                "Hallucinations can occur due to Parkinson’s medications or brain changes. Adjusting medication and consulting a doctor may help."
+            ]
+        },
+        {
+            "tag": "parkinson_speech_problems",
+            "patterns": [
+                "Can Parkinson’s affect speech?",
+                "Why do Parkinson’s patients have trouble talking?",
+                "How to improve speech in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can cause soft or slurred speech. Speech therapy and vocal exercises can help improve communication."
+            ]
+        },
+        {
+            "tag": "parkinson_handwriting",
+            "patterns": [
+                "Why does Parkinson’s affect handwriting?",
+                "Can Parkinson’s patients write normally?",
+                "How to improve handwriting with Parkinson’s?"
+            ],
+            "responses": [
+                "Micrographia, or small handwriting, is common in Parkinson’s. Writing aids and hand exercises may help improve legibility."
+            ]
+        },
+        {
+            "tag": "parkinson_balance_problems",
+            "patterns": [
+                "Why do Parkinson’s patients fall?",
+                "How to improve balance in Parkinson’s?",
+                "Can physical therapy help with Parkinson’s balance issues?"
+            ],
+            "responses": [
+                "Parkinson’s can affect balance and increase fall risk. Physical therapy and strength exercises can help improve stability."
+            ]
+        },
+        {
+            "tag": "parkinson_fatigue",
+            "patterns": [
+                "Why do Parkinson’s patients feel tired?",
+                "Can Parkinson’s cause fatigue?",
+                "How to manage fatigue in Parkinson’s?"
+            ],
+            "responses": [
+                "Fatigue is common in Parkinson’s due to sleep disturbances and medication effects. Proper rest, exercise, and nutrition can help boost energy."
+            ]
+        },
+        {
+            "tag": "parkinson_sweating",
+            "patterns": [
+                "Does Parkinson’s cause excessive sweating?",
+                "Why do Parkinson’s patients sweat a lot?",
+                "How to manage sweating in Parkinson’s?"
+            ],
+            "responses": [
+                "Parkinson’s can disrupt temperature regulation, leading to excessive sweating. Staying cool and wearing breathable clothing may help."
+            ]
+        },
+        {
+            "tag": "parkinson_gut_microbiome",
+            "patterns": [
+                "How does the gut microbiome affect Parkinson’s?",
+                "Can gut bacteria influence Parkinson’s?",
+                "What is the link between Parkinson’s and gut health?"
+            ],
+            "responses": [
+                "Research suggests gut bacteria may play a role in Parkinson’s. Probiotics and a fiber-rich diet could help maintain gut health."
+            ]
+        },
+        {
+            "tag": "parkinson_fasting",
+            "patterns": [
+                "Can fasting help Parkinson’s?",
+                "Does intermittent fasting benefit Parkinson’s?",
+                "Is fasting safe for Parkinson’s patients?"
+            ],
+            "responses": [
+                "Some research suggests intermittent fasting may support brain health in Parkinson’s, but more studies are needed. Consult a doctor before trying it."
+            ]
+        },
+        {
+            "tag": "parkinson_smoking",
+            "patterns": [
+                "Does smoking prevent Parkinson’s?",
+                "Is nicotine good for Parkinson’s?",
+                "Can nicotine improve Parkinson’s symptoms?"
+            ],
+            "responses": [
+                "Some studies suggest nicotine might have protective effects against Parkinson’s, but smoking has severe health risks. Research is ongoing."
+            ]
+        },
+        {
+            "tag": "parkinson_essential_oils",
+            "patterns": [
+                "Can essential oils help Parkinson’s?",
+                "What are the best essential oils for Parkinson’s?",
+                "Do essential oils improve Parkinson’s symptoms?"
+            ],
+            "responses": [
+                "Essential oils like lavender and peppermint may help with relaxation and stress, but they don’t treat Parkinson’s directly."
+            ]
+        }
+    ]
+}

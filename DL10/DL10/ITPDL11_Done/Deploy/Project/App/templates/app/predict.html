@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's  Prediction Form</title>
+    <style>
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: #297aca;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    
+   
+    <form action="{% url 'model' %}" method="post">
+       <center> <a href="/" style="color: red;" class="text-gray-300 hover:text-white">Home</a></center>
+        <center><h1>Parkinson Prediction Form</h1></center>
+        <br>
+        {% csrf_token %}
+        <label for="symptoms">Symptoms:</label>
+        <select id="symptoms" name="symptoms">
+            <option value=""disabled selected >Select a symptom</option>
+            <option value="17">Memory loss</option>
+            <option value="3">Confusion</option>
+            <option value="26">Visual-spatial difficulties</option>
+            <option value="8">Difficulty recognizing people</option>
+            <option value="21">Severe memory loss</option>
+            <option value="14">Incontinence</option>
+            <option value="11">Difficulty walking</option>
+            <option value="16">Loss of smell</option>
+            <option value="0">Agitation</option>
+            <option value="13">Hallucinations</option>
+            <option value="15">Loss of facial expression</option>
+            <option value="10">Difficulty swallowing</option>
+            <option value="6">Difficulty in speaking</option>
+            <option value="4">Dementia</option>
+            <option value="18">Memory problems</option>
+            <option value="2">Cognitive decline</option>
+            <option value="22">Sleep disturbances</option>
+            <option value="19">Mood changes</option>
+            <option value="5">Depression</option>
+            <option value="1">Balance problems</option>
+            <option value="23">Slowness of movement</option>
+            <option value="24">Stiffness</option>
+            <option value="25">Tremors</option>
+            <option value="12">Disorientation</option>
+            <option value="7">Difficulty in thinking</option>
+            <option value="20">Rapid eye movement (REM) sleep disorder</option>
+        </select>
+
+        <label for="alzheimers-disease">Alzheimer's Disease:</label>
+        <select id="alzheimers-disease" name="Alzheimer_Disease">
+            <option disabled selected>__select__</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <label for="overlapping-symptom">Overlapping Symptom:</label>
+        <select id="Overlapping Symptom" name="Overlapping_Symptom">
+            <option disabled selected>__select__</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+
+        <input type="submit" value="Predict">
+    </form>
+</body>
+</html>

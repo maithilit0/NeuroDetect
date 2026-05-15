@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroDetect — Create Account</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    :root {
+      --red:      #e8503a;
+      --red-glow: rgba(232,80,58,0.25);
+      --red-soft: rgba(232,80,58,0.10);
+      --bg:       #0d1117;
+      --bg2:      #161b24;
+      --bg3:      #1c2333;
+      --card-bdr: rgba(255,255,255,0.07);
+      --white:    #f0f4fc;
+      --muted:    rgba(200,210,230,0.55);
+      --green:    #34d399;
+      --radius:   16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; height: 100%; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 var(--red-glow); }
+      70%  { box-shadow: 0 0 0 14px rgba(232,80,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(232,80,58,0); }
+    }
+
+    /* ─────────────────────────────
+       NAVBAR
+    ───────────────────────────── */
+    .top-nav {
+      height: 60px;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--card-bdr);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      flex-shrink: 0;
+    }
+    .brand {
+      font-weight: 800; font-size: 20px;
+      color: var(--white); text-decoration: none;
+    }
+    .brand span { color: var(--red); }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .nav-links a {
+      color: rgba(200,210,230,0.60);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 8px 14px; text-decoration: none;
+      border-radius: 6px; transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 14px; right: 14px;
+      height: 2px; background: var(--red); border-radius: 2px;
+      transform: scaleX(0); transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ─────────────────────────────
+       MAIN LAYOUT — split screen
+    ───────────────────────────── */
+    .page-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* LEFT — form panel */
+    .form-panel {
+      width: 460px;
+      flex-shrink: 0;
+      background: var(--bg2);
+      border-right: 1px solid var(--card-bdr);
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px 44px;
+      overflow-y: auto;
+    }
+    .form-inner {
+      width: 100%;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* badge */
+    .reg-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232,80,58,0.25);
+      color: #ff8c7a; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 20px;
+    }
+    .reg-badge .dot {
+      width: 6px; height: 6px; background: var(--red);
+      border-radius: 50%; animation: pulse-ring 2s infinite;
+    }
+
+    .form-inner h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 28px; font-weight: 700; color: var(--white);
+      line-height: 1.2; margin-bottom: 6px;
+    }
+    .form-inner h1 em { font-style: italic; color: var(--red); }
+    .form-inner .sub {
+      font-size: 13px; color: var(--muted); margin-bottom: 28px;
+    }
+
+    /* error alert */
+    .error-alert {
+      background: rgba(232,80,58,0.08);
+      border: 1px solid rgba(232,80,58,0.25);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px; color: #ff8c7a;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .error-alert i { margin-top: 2px; flex-shrink: 0; }
+
+    /* two-col row */
+    .field-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+
+    /* field group */
+    .field-group {
+      margin-bottom: 16px;
+    }
+    .field-group label {
+      display: block;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 7px;
+    }
+
+    /* style all Django-rendered inputs */
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--card-bdr);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-group input:focus,
+    .field-group select:focus {
+      border-color: rgba(232,80,58,0.45);
+      box-shadow: 0 0 0 3px rgba(232,80,58,0.08);
+    }
+    .field-group input::placeholder { color: rgba(200,210,230,0.25); }
+
+    /* password strength hint */
+    .hint {
+      font-size: 11px; color: rgba(200,210,230,0.35);
+      margin-top: 5px;
+    }
+
+    /* divider */
+    .form-divider {
+      height: 1px; background: var(--card-bdr); margin: 20px 0;
+    }
+
+    /* submit */
+    .btn-register {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--red); color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 1px;
+      padding: 14px 0; border: none; border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 28px var(--red-glow);
+      transition: all 0.3s ease;
+      margin-top: 4px;
+    }
+    .btn-register:hover {
+      background: #c94030;
+      box-shadow: 0 12px 36px rgba(232,80,58,0.55);
+      transform: translateY(-2px);
+    }
+
+    /* login link */
+    .login-link {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 13px; color: var(--muted);
+    }
+    .login-link a {
+      color: var(--red); font-weight: 700; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .login-link a:hover { opacity: 0.75; }
+
+    /* ─────────────────────────────
+       RIGHT — decorative panel
+    ───────────────────────────── */
+    .deco-panel {
+      flex: 1;
+      background:
+        linear-gradient(160deg, rgba(13,17,23,0.85) 0%, rgba(30,8,5,0.75) 50%, rgba(13,17,23,0.92) 100%),
+        url('https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=1200&q=80') center/cover no-repeat;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ambient glow */
+    .deco-panel::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(232,80,58,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .deco-content {
+      position: relative; z-index: 1;
+      max-width: 400px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .deco-overline {
+      font-size: 10px; font-weight: 800; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--red); margin-bottom: 16px;
+    }
+    .deco-content h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 38px; font-weight: 700; color: var(--white);
+      line-height: 1.2; margin-bottom: 18px;
+    }
+    .deco-content h2 em { font-style: italic; color: var(--red); }
+    .deco-content p {
+      font-size: 15px; color: rgba(200,210,230,0.65);
+      line-height: 1.8; margin-bottom: 36px;
+    }
+
+    /* feature list */
+    .feature-list { display: flex; flex-direction: column; gap: 14px; }
+    .feature-item {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-bdr);
+      border-radius: 14px; padding: 14px 18px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .feature-item:hover {
+      border-color: rgba(232,80,58,0.25);
+      background: rgba(232,80,58,0.05);
+    }
+    .feature-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border-radius: 12px; background: var(--red-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--red);
+    }
+    .feature-text h4 {
+      font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 2px;
+    }
+    .feature-text p { font-size: 12px; color: var(--muted); margin: 0; }
+
+    /* bottom stage pills */
+    .stage-pills {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px;
+    }
+    .stage-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-bdr);
+      border-radius: 50px; padding: 5px 12px;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+    }
+    .stage-pill .dot-g { width:6px;height:6px;border-radius:50%;background:var(--green); }
+    .stage-pill .dot-b { width:6px;height:6px;border-radius:50%;background:#38bdf8; }
+    .stage-pill .dot-a { width:6px;height:6px;border-radius:50%;background:#fbbf24; }
+    .stage-pill .dot-r { width:6px;height:6px;border-radius:50%;background:var(--red); }
+
+    @media (max-width: 900px) {
+      .deco-panel { display: none; }
+      .form-panel { width: 100%; border-right: none; }
+    }
+    @media (max-width: 500px) {
+      .form-panel { padding: 32px 22px; }
+      .field-row { grid-template-columns: 1fr; }
+      .top-nav { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR — matches home page -->
+  <nav class="top-nav">
+    <a class="brand" href="/">Neuro<span>Detect</span></a>
+    <div class="nav-links">
+      {% if user.is_authenticated %}
+      <a href="/">Home</a>
+      <a href="/#service">About</a>
+      <a href="{% url 'Database' %}">Database</a>
+      <a href="{% url 'users-profile' %}">Profile</a>
+      <a href="{% url 'logout_view' %}">Logout</a>
+      {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <div class="page-body">
+
+    <!-- ── LEFT: FORM ── -->
+    <div class="form-panel">
+      <div class="form-inner">
+
+        <div class="reg-badge"><span class="dot"></span> New Account</div>
+        <h1>Create your <em>Account</em></h1>
+        <p class="sub">Join NeuroDetect to start running AI-powered brain scan analysis.</p>
+
+        <!-- error block -->
+        <form method="post">
+          {% csrf_token %}
+
+          {% if form.errors %}
+          <div class="error-alert">
+            <i class="fa fa-exclamation-circle"></i>
+            <div>
+              {% for key, value in form.errors.items %}
+              <div>{{ value }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- first + last name side by side -->
+          <div class="field-row">
+            <div class="field-group">
+              <label>First Name</label>
+              {{ form.first_name }}
+            </div>
+            <div class="field-group">
+              <label>Last Name</label>
+              {{ form.last_name }}
+            </div>
+          </div>
+
+          <!-- username -->
+          <div class="field-group">
+            <label>Username</label>
+            {{ form.username }}
+          </div>
+
+          <!-- email -->
+          <div class="field-group">
+            <label>Email Address</label>
+            {{ form.email }}
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- passwords -->
+          <div class="field-group">
+            <label>Password</label>
+            {{ form.password1 }}
+            <div class="hint">Min. 8 characters — letters, numbers &amp; symbols</div>
+          </div>
+          <div class="field-group">
+            <label>Confirm Password</label>
+            {{ form.password2 }}
+          </div>
+
+          <button type="submit" class="btn-register">
+            <i class="fa fa-user-plus"></i>&nbsp; Create Account
+          </button>
+
+        </form>
+
+        <div class="login-link">
+          Already have an account? <a href="{% url 'login' %}">Sign In</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT: DECO ── -->
+    <div class="deco-panel">
+      <div class="deco-content">
+        <div class="deco-overline">Why NeuroDetect?</div>
+        <h2>Early Detection<br>Saves <em>Lives</em></h2>
+        <p>
+          NeuroDetect uses state-of-the-art deep learning to analyse brain MRI scans and
+          classify neurodegenerative disease stages — giving clinicians an instant,
+          data-backed second opinion.
+        </p>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-bolt"></i></div>
+            <div class="feature-text">
+              <h4>Instant Results</h4>
+              <p>Get a disease stage classification in seconds after upload.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-shield"></i></div>
+            <div class="feature-text">
+              <h4>Secure &amp; Private</h4>
+              <p>All scans are processed securely and never shared.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-sitemap"></i></div>
+            <div class="feature-text">
+              <h4>4-Stage Classifier</h4>
+              <p>Detects No Impairment, Very Mild, Mild, and Moderate stages.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-pills">
+          <span class="stage-pill"><span class="dot-g"></span> No Impairment</span>
+          <span class="stage-pill"><span class="dot-b"></span> Very Mild</span>
+          <span class="stage-pill"><span class="dot-a"></span> Mild</span>
+          <span class="stage-pill"><span class="dot-r"></span> Moderate</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Auto-style Django's generated inputs to match theme
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      el.style.width = '100%';
+      el.style.background = 'var(--bg3)';
+      el.style.border = '1px solid var(--card-bdr)';
+      el.style.borderRadius = '10px';
+      el.style.color = 'var(--white)';
+      el.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+      el.style.fontSize = '14px';
+      el.style.padding = '11px 14px';
+      el.style.outline = 'none';
+      el.addEventListener('focus', () => {
+        el.style.borderColor = 'rgba(232,80,58,0.45)';
+        el.style.boxShadow = '0 0 0 3px rgba(232,80,58,0.08)';
+      });
+      el.addEventListener('blur', () => {
+        el.style.borderColor = 'var(--card-bdr)';
+        el.style.boxShadow = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>
